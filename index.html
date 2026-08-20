@@ -1,0 +1,2807 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1220">
+  <meta name="description" content="一份清爽、克制的生日祝福网页">
+  <link rel="icon" href="data:,">
+  <title>生日祝福 · 张淑芸</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --paper: #0b1220;
+      --surface: transparent;
+      --ink: #fffaf1;
+      --muted: #e2e4ee;
+      --line: rgba(238, 235, 255, 0.28);
+      --green: #357463;
+      --green-dark: #295c50;
+      --blue: #587c98;
+      --coral: #ffc16e;
+      --coral-soft: rgba(9, 18, 31, 0.5);
+      --shadow: none;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--paper);
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ink);
+      background-color: #0b0a15;
+      background-image: none;
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* One still photograph carries the whole transition, so no secondary copy
+       can detach from the landscape while the camera eases into the sky. */
+    .scene-backdrop {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+      background: #0b0a15;
+    }
+
+    .scene-image {
+      position: absolute;
+      inset: 0;
+      background-image: url("assets/night-sky.jpg");
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      background-position: center top;
+      background-position-y: 0%;
+      transform: translateZ(0);
+      filter: brightness(0.9) saturate(1.02) contrast(1.02);
+      will-change: transform, filter;
+    }
+
+    .scene-backdrop.is-rising .scene-image {
+      animation: scene-camera-rise 2400ms cubic-bezier(0.38, 0.05, 0.2, 1) both;
+    }
+
+    .scene-backdrop.is-blessing .scene-image {
+      background-position-y: 100%;
+      transform: translate3d(0, 0, 0) scale(1.22);
+      filter: brightness(1.16) saturate(1.08) contrast(1.05);
+    }
+
+    .scene-glow {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(120% 90% at 50% 30%, rgba(176, 140, 235, 0.12), rgba(58, 43, 110, 0.06) 52%, rgba(12, 10, 28, 0.42) 100%);
+      opacity: 0;
+      will-change: opacity;
+    }
+
+    .scene-backdrop.is-rising .scene-glow,
+    .scene-backdrop.is-blessing .scene-glow {
+      opacity: 1;
+      transition: opacity 500ms ease;
+    }
+
+    .scene-haze {
+      position: absolute;
+      inset: -14%;
+      background:
+        radial-gradient(52% 44% at 50% 42%, rgba(152, 132, 235, 0.34), rgba(94, 82, 184, 0.12) 54%, transparent 76%),
+        radial-gradient(36% 30% at 62% 34%, rgba(216, 188, 255, 0.18), transparent 70%);
+      opacity: 0;
+      mix-blend-mode: screen;
+      will-change: transform, opacity;
+    }
+
+    .scene-backdrop.is-rising .scene-haze {
+      animation: scene-haze-push 2400ms cubic-bezier(0.42, 0, 0.22, 1) both;
+    }
+
+    .scene-backdrop.is-blessing .scene-haze {
+      opacity: 0.55;
+      transform: scale(1.4) translate3d(0, -5%, 0);
+    }
+
+    .scene-vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(88% 78% at 50% 46%, transparent 50%, rgba(5, 4, 14, 0.74) 100%);
+      opacity: 0;
+      will-change: opacity;
+    }
+
+    .scene-backdrop.is-rising .scene-vignette {
+      animation: scene-vignette-in 2400ms ease-out both;
+    }
+
+    .scene-backdrop.is-blessing .scene-vignette {
+      opacity: 0.6;
+    }
+
+    .scene-backdrop.is-rising {
+      animation: scene-transition-blur 2400ms linear both;
+    }
+
+    @keyframes scene-haze-push {
+      0% {
+        opacity: 0;
+        transform: scale(1) translate3d(0, 0, 0);
+      }
+      45% {
+        opacity: 0.55;
+      }
+      100% {
+        opacity: 0.7;
+        transform: scale(1.5) translate3d(0, -6%, 0);
+      }
+    }
+
+    @keyframes scene-vignette-in {
+      0% { opacity: 0; }
+      55% { opacity: 0.72; }
+      100% { opacity: 0.6; }
+    }
+
+    @keyframes scene-transition-blur {
+      0%, 30% { filter: blur(0); }
+      48% { filter: blur(2.4px); }
+      66% { filter: blur(0); }
+      100% { filter: blur(0); }
+    }
+
+    @keyframes scene-camera-rise {
+      0% {
+        background-position-y: 0%;
+        transform: translateZ(0) scale(1);
+        filter: brightness(0.86) saturate(1.02) contrast(1.02);
+      }
+      58% {
+        background-position-y: 52%;
+        transform: translate3d(0, 0, 0) scale(1.12);
+        filter: brightness(1.04) saturate(1.05) contrast(1.04);
+      }
+      100% {
+        background-position-y: 100%;
+        transform: translate3d(0, 0, 0) scale(1.22);
+        filter: brightness(1.16) saturate(1.08) contrast(1.05);
+      }
+    }
+
+    .scene-rising .screen--home {
+      animation: home-drop-out 1050ms cubic-bezier(0.3, 0, 0.35, 1) forwards !important;
+      pointer-events: none;
+    }
+
+    .scene-rising .date-stamp {
+      animation: home-drop-out 1050ms cubic-bezier(0.3, 0, 0.35, 1) forwards;
+      pointer-events: none;
+    }
+
+    @keyframes home-drop-out {
+      0% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translate3d(0, 17vh, 0) scale(0.955);
+      }
+    }
+
+    .scene-rising .bottom-actions {
+      opacity: 0.82;
+    }
+
+    .scene-blessing .date-stamp {
+      animation: scene-copy-reveal 420ms ease-out both;
+    }
+
+    @keyframes scene-copy-reveal {
+      from { opacity: 0; transform: translate3d(0, -8px, 0); }
+      to { opacity: 1; transform: translate3d(0, 0, 0); }
+    }
+
+    #sky-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    #blessing-stage {
+      position: fixed;
+      inset: 0;
+      display: none;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .scene-blessing #blessing-stage.is-running {
+      display: block;
+    }
+
+    #ring-canvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    .floating-wishes {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .floating-wish {
+      position: absolute;
+      top: 0;
+      left: 0;
+      margin: 0;
+      color: rgba(255, 239, 173, 1);
+      font-size: clamp(0.78rem, 1.25vw, 0.96rem);
+      font-weight: 600;
+      line-height: 1.45;
+      letter-spacing: 0.12em;
+      white-space: nowrap;
+      writing-mode: vertical-rl;
+      text-orientation: upright;
+      opacity: 0;
+      transform: translate3d(-100px, -100px, 0) translate(-50%, -50%);
+      text-shadow:
+        0 0 11px rgba(255, 214, 105, 0.78),
+        0 0 22px rgba(242, 161, 44, 0.34),
+        0 2px 9px rgba(0, 0, 0, 0.56);
+      will-change: transform, opacity;
+    }
+
+    .bottom-actions {
+      position: fixed;
+      left: 18px;
+      bottom: 18px;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .music-action {
+      min-width: 92px;
+      min-height: 38px;
+      padding: 8px 13px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      border: 1px solid rgba(255, 218, 146, 0.3);
+      border-radius: 999px;
+      background: rgba(9, 17, 30, 0.62);
+      color: rgba(255, 233, 185, 0.88);
+      cursor: pointer;
+      font-size: 0.78rem;
+      backdrop-filter: blur(8px);
+      transition: background-color 20ms ease-out, border-color 20ms ease-out, transform 20ms ease-out;
+    }
+
+    .music-action:hover,
+    .music-action:focus-visible {
+      border-color: rgba(255, 218, 146, 0.62);
+      background: rgba(25, 35, 52, 0.8);
+    }
+
+    .music-action:active {
+      transform: translateY(1px);
+    }
+
+    .music-action:focus-visible {
+      outline: 3px solid rgba(255, 218, 146, 0.24);
+      outline-offset: 3px;
+    }
+
+    .music-action__icon {
+      width: 1em;
+      flex: 0 0 1em;
+      line-height: 1;
+      text-align: center;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .page {
+      width: calc(100% - 28px);
+      max-width: 760px;
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: clamp(18px, 5vw, 46px) 0 28px;
+      display: flex;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .shell {
+      width: 100%;
+      min-width: 0;
+      position: relative;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+      border-radius: 0;
+    }
+
+    .date-stamp {
+      position: fixed;
+      right: clamp(18px, 3vw, 32px);
+      top: max(18px, env(safe-area-inset-top));
+      z-index: 3;
+      color: rgba(255, 221, 157, 0.88);
+      font-size: 0.76rem;
+      letter-spacing: 0.1em;
+      text-shadow: 0 1px 10px rgba(255, 181, 92, 0.24);
+      white-space: nowrap;
+    }
+
+    .scene-blessing .date-stamp {
+      display: none;
+    }
+
+    .topbar {
+      min-height: 64px;
+      padding: 14px clamp(18px, 4vw, 30px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.88rem;
+      letter-spacing: 0;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    .topbar__label {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .topbar__label::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      flex: 0 0 7px;
+      border-radius: 50%;
+      background: var(--coral);
+      box-shadow: 0 0 0 4px rgba(240, 173, 104, 0.14), 0 0 14px rgba(240, 173, 104, 0.35);
+    }
+
+    .topbar__date {
+      color: var(--muted);
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+
+    .content {
+      padding: clamp(44px, 8vw, 78px) clamp(22px, 8vw, 78px) clamp(42px, 7vw, 64px);
+      text-align: center;
+      text-shadow: 0 2px 18px rgba(0, 0, 0, 0.48);
+    }
+
+    .screen[hidden] {
+      display: none;
+    }
+
+    .screen.is-active {
+      animation: screen-in 420ms ease both;
+    }
+
+    .screen--blessing {
+      text-align: left;
+    }
+
+    /* Fixed copy is anchored inside the ring: label at the top, title and
+       signature at the top/bottom edges, body centered on the ring. */
+    .screen--blessing .blessing-heading,
+    .screen--blessing .blessing__label,
+    .screen--blessing .signature {
+      opacity: 0;
+      transform: translateX(-50%) translateY(10px);
+      transition: opacity 1100ms ease, transform 1100ms ease;
+    }
+
+    .screen--blessing .is-copy-visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .eyebrow {
+      margin: 0 0 15px;
+      color: var(--coral);
+      font-size: 0.9rem;
+      letter-spacing: 0.04em;
+      font-weight: 600;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--ink);
+      font-size: clamp(2.18rem, 7vw, 3.6rem);
+      font-weight: 700;
+      letter-spacing: 0;
+      line-height: 1.14;
+    }
+
+    .intro {
+      max-width: 520px;
+      margin: 20px auto 0;
+      color: var(--muted);
+      font-size: clamp(0.98rem, 2.6vw, 1.08rem);
+    }
+
+    .home-decor {
+      width: min(100%, 220px);
+      margin: 28px auto 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: var(--coral);
+    }
+
+    .home-decor::before,
+    .home-decor::after {
+      content: "";
+      height: 1px;
+      flex: 1;
+      background: rgba(240, 173, 104, 0.34);
+    }
+
+    .home-decor__mark {
+      width: 8px;
+      height: 8px;
+      border: 1px solid var(--coral);
+      transform: rotate(45deg);
+    }
+
+    .primary-button,
+    .secondary-button {
+      min-height: 48px;
+      border-radius: 8px;
+      padding: 11px 22px;
+      cursor: pointer;
+      transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+    }
+
+    .primary-button {
+      min-width: 178px;
+      border: 1px solid rgba(255, 205, 139, 0.72);
+      background: #d98f4e;
+      color: #15100b;
+      font-weight: 600;
+      text-shadow: none;
+      box-shadow: 0 10px 26px rgba(220, 137, 63, 0.2);
+    }
+
+    .primary-button:hover,
+    .primary-button:focus-visible {
+      border-color: rgba(255, 222, 174, 0.95);
+      background: #e7a15f;
+      box-shadow: 0 12px 28px rgba(230, 153, 82, 0.28);
+    }
+
+    .secondary-button {
+      border: 1px solid rgba(255, 217, 160, 0.46);
+      background: rgba(8, 17, 30, 0.58);
+      color: #f8e8cf;
+      font-size: 0.95rem;
+      text-shadow: none;
+      backdrop-filter: blur(8px);
+    }
+
+    .secondary-button:hover,
+    .secondary-button:focus-visible {
+      border-color: rgba(255, 220, 169, 0.82);
+      background: rgba(26, 38, 54, 0.78);
+    }
+
+    .primary-button:active,
+    .secondary-button:active {
+      transform: translateY(1px);
+    }
+
+    .primary-button:focus-visible,
+    .secondary-button:focus-visible {
+      outline: 3px solid rgba(255, 205, 139, 0.24);
+      outline-offset: 3px;
+    }
+
+    .blessing {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      text-align: center;
+    }
+
+    .blessing-heading {
+      position: absolute;
+      left: 50%;
+      top: calc(50% - var(--ring-r, 160px) + 12px);
+      transform: translateX(-50%);
+      width: min(calc(100% - 32px), 820px);
+      margin: 0;
+      text-align: center;
+      font-size: clamp(2rem, 6vw, 3.1rem);
+    }
+
+    .blessing__label {
+      position: absolute;
+      left: 50%;
+      top: calc(50% - var(--ring-r, 160px) + 58px);
+      transform: translateX(-50%);
+      margin: 0;
+      color: var(--coral);
+      font-size: 0.94rem;
+      text-align: center;
+      white-space: nowrap;
+      text-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.95),
+        0 4px 16px rgba(7, 5, 16, 0.9),
+        0 0 22px rgba(255, 193, 110, 0.3);
+    }
+
+    .blessing-groups {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: min(calc(100% - 32px), 620px);
+      min-height: 0;
+      display: grid;
+      place-items: center;
+    }
+
+    .blessing-group {
+      grid-area: 1 / 1;
+      margin: 0;
+      padding: clamp(20px, 4vw, 34px) clamp(22px, 5vw, 44px);
+      width: min(100%, 540px);
+      max-width: 100%;
+      box-sizing: border-box;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(18px) scale(0.985);
+      transition: opacity 980ms ease, transform 980ms ease;
+      will-change: opacity, transform;
+    }
+
+    .blessing-group.is-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .blessing-group:last-child.is-visible {
+      transform: translateY(-26px) scale(1);
+    }
+
+    .blessing-group p {
+      margin: 0 0 0.48em;
+      color: #fbf5ea;
+      font-size: clamp(1.08rem, 2.9vw, 1.34rem);
+      white-space: nowrap;
+      line-height: 1.58;
+      letter-spacing: 0.04em;
+      text-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.95),
+        0 5px 20px rgba(7, 5, 16, 0.88),
+        0 0 26px rgba(255, 210, 136, 0.32);
+    }
+
+    .blessing-group p:last-child {
+      margin-bottom: 0;
+    }
+
+    .blessing-group p:nth-child(4) {
+      font-size: clamp(1.08rem, 2.85vw, 1.34rem);
+      white-space: nowrap;
+    }
+
+    .blessing-group p:nth-child(2) {
+      white-space: nowrap;
+    }
+
+    .blessing-group:nth-child(3) p {
+      font-size: clamp(1rem, 2.55vw, 1.24rem);
+      letter-spacing: 0.02em;
+    }
+
+    .blessing-group.is-visible p {
+      opacity: 0;
+      animation: blessing-line-in 1000ms ease forwards;
+    }
+
+    .blessing-group.is-visible p:nth-child(1) { animation-delay: 0.4s; }
+    .blessing-group.is-visible p:nth-child(2) { animation-delay: 2.1s; }
+    .blessing-group.is-visible p:nth-child(3) { animation-delay: 3.8s; }
+    .blessing-group.is-visible p:nth-child(4) { animation-delay: 5.5s; }
+
+    @keyframes blessing-line-in {
+      from { opacity: 0; transform: translateY(7px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .signature {
+      position: absolute;
+      left: calc(50% + 64px);
+      top: calc(50% - var(--ring-r, 160px) + 150px);
+      transform: none;
+      margin: 0;
+      color: var(--muted);
+      text-align: left;
+      font-size: 1rem;
+      white-space: nowrap;
+    }
+
+    .signature__date {
+      margin-left: 14px;
+      color: var(--muted);
+      font-size: 1rem;
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+
+    .back-button,
+    .replay-button {
+      display: none;
+      height: 38px;
+      min-height: 38px;
+      min-width: 92px;
+      padding: 8px 13px;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      line-height: 1;
+      font-size: 0.78rem;
+      white-space: nowrap;
+      border: 1px solid rgba(255, 218, 146, 0.3);
+      border-radius: 999px;
+      background: rgba(9, 17, 30, 0.62);
+      color: rgba(255, 233, 185, 0.88);
+      backdrop-filter: blur(8px);
+      transition: background-color 20ms ease-out, border-color 20ms ease-out, color 20ms ease-out, transform 20ms ease-out;
+    }
+
+    .back-button.is-visible,
+    .replay-button.is-visible {
+      display: inline-flex;
+    }
+
+    .back-button:hover,
+    .back-button:focus-visible,
+    .replay-button:hover,
+    .replay-button:focus-visible {
+      border-color: rgba(255, 218, 146, 0.62);
+      background: rgba(25, 35, 52, 0.8);
+    }
+
+    .back-button:focus-visible,
+    .replay-button:focus-visible {
+      outline: 3px solid rgba(255, 218, 146, 0.24);
+      outline-offset: 3px;
+    }
+
+    @keyframes screen-in {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 540px) {
+      .page {
+        width: calc(100% - 20px);
+        max-width: 760px;
+        padding-top: 16px;
+        padding-bottom: 16px;
+      }
+
+      .topbar {
+        min-height: 62px;
+        padding: 13px 15px;
+      }
+
+      .content {
+        padding: 40px 18px 34px;
+      }
+
+      .topbar__date {
+        font-size: 0.74rem;
+      }
+
+      .primary-button {
+        width: min(100%, 240px);
+      }
+
+      .blessing-heading {
+        font-size: clamp(1.9rem, 9vw, 2.6rem);
+      }
+
+      .bottom-actions {
+        left: 12px;
+        bottom: max(12px, env(safe-area-inset-bottom));
+      }
+
+      .music-action {
+        min-width: 88px;
+        min-height: 36px;
+        padding: 7px 11px;
+        font-size: 0.74rem;
+      }
+
+      .back-button,
+      .replay-button {
+        height: 36px;
+        min-height: 36px;
+        min-width: 88px;
+        padding: 7px 11px;
+        font-size: 0.74rem;
+      }
+
+      .floating-wish {
+        font-size: 0.76rem;
+        letter-spacing: 0.1em;
+      }
+
+      .blessing-group {
+        padding-left: 14px;
+        padding-right: 14px;
+        width: min(100%, 356px);
+      }
+
+      .blessing-group p {
+        white-space: normal;
+      }
+
+      .blessing-group p:nth-child(4) {
+        font-size: clamp(0.95rem, 4.55vw, 1.04rem);
+        white-space: normal;
+        letter-spacing: 0.02em;
+      }
+
+      .blessing-group p:nth-child(2) {
+        font-size: clamp(0.88rem, 4.4vw, 1rem);
+        white-space: normal;
+        letter-spacing: 0;
+      }
+
+      .blessing-group:nth-child(3) p {
+        font-size: clamp(0.78rem, 3.6vw, 0.88rem);
+        letter-spacing: 0;
+      }
+
+    }
+
+    @media (max-width: 360px) {
+      .blessing-group:nth-child(3) p {
+        font-size: clamp(0.7rem, 3.4vw, 0.78rem);
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="scene-backdrop" id="scene-backdrop" aria-hidden="true">
+    <div class="scene-image"></div>
+    <div class="scene-haze"></div>
+    <div class="scene-glow"></div>
+    <div class="scene-vignette"></div>
+  </div>
+  <canvas id="sky-canvas" aria-hidden="true"></canvas>
+  <div class="floating-wishes" id="floating-wishes" aria-hidden="true"></div>
+  <div id="blessing-stage" aria-hidden="true">
+    <canvas id="ring-canvas"></canvas>
+  </div>
+  <main class="page">
+    <section class="shell" aria-labelledby="page-title">
+      <span class="date-stamp">2026年8月21日</span>
+      <div class="content screen screen--home is-active" id="home-screen">
+        <p class="eyebrow">一份简单的生日问候</p>
+        <h1 id="page-title">生日快乐，<span id="recipient-name">张淑芸</span></h1>
+        <p class="intro">虽然今天没能当面说，但还是想送上一句简单的祝福。</p>
+
+        <div class="home-decor" aria-hidden="true"><span class="home-decor__mark"></span></div>
+
+        <button class="primary-button" id="open-button" type="button" aria-controls="blessing-screen" aria-expanded="false">收下这份生日祝福</button>
+      </div>
+
+      <div class="content screen screen--blessing" id="blessing-screen" hidden>
+        <div class="blessing">
+          <h1 class="blessing-heading">Happy 20th Birthday to<br>Zhang Shuyun</h1>
+          <p class="blessing__label">送给你的生日祝福</p>
+          <div class="blessing-groups" aria-live="polite">
+            <div class="blessing-group">
+              <p>愿你无忧</p>
+              <p>愿你喜乐常伴</p>
+              <p>愿你前路皆坦途</p>
+              <p>愿你二十岁熠熠生辉</p>
+            </div>
+            <div class="blessing-group">
+              <p>愿你一切尽意，万事从欢</p>
+              <p>愿你遇到的人都带着真诚的善意</p>
+              <p>愿你步履坚定，所有热爱都不被辜负</p>
+              <p>愿你新的一岁少一点 bug，多一点好运</p>
+            </div>
+            <div class="blessing-group">
+              <p>愿你怀揣赤诚与勇气，收获前路所有期许</p>
+              <p>愿你学海行舟稳步向前，每份耕耘都有归处</p>
+              <p>愿你往后的人生繁花满径，所有期待都如期而至</p>
+            </div>
+          </div>
+          <p class="signature">祝你新的一岁平安顺利，万事如意<br>—— <span id="sender-name">卢谢轶</span><span class="signature__date">2026年8月21日</span></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="bottom-actions">
+    <button class="music-action" id="music-button" type="button" aria-pressed="false">
+      <span class="music-action__icon" id="music-icon" aria-hidden="true">▶</span>
+      <span id="music-label">播放音乐</span>
+    </button>
+    <button class="secondary-button back-button" id="back-button" type="button">返回首页</button>
+    <button class="secondary-button replay-button" id="replay-button" type="button">再看一次</button>
+  </div>
+  <audio id="background-music" src="assets/canon-piano.mp3" preload="auto" autoplay loop playsinline></audio>
+
+  <script>
+    (function () {
+      "use strict";
+
+      var canvas = document.getElementById("sky-canvas");
+      var context = canvas.getContext("2d");
+      var sceneBackdrop = document.getElementById("scene-backdrop");
+      var musicButton = document.getElementById("music-button");
+      var musicIcon = document.getElementById("music-icon");
+      var musicLabel = document.getElementById("music-label");
+      var backgroundMusic = document.getElementById("background-music");
+      var floatingWishesLayer = document.getElementById("floating-wishes");
+      var lanterns = [];
+      var particles = [];
+      var stars = [];
+      var floatingWishes = [];
+      var floatingWishQueue = [];
+      var lanternImage = new Image();
+      var lanternImageReady = false;
+      var width = 0;
+      var height = 0;
+      var pixelRatio = 1;
+      var lastFrame = 0;
+      var animationFrame = 0;
+      var skyInitialized = false;
+      var mobileMode = window.innerWidth < 600;
+      var safeRect = null;
+      var randomState = 0x08212026;
+      var lanternId = 0;
+
+      // 修改背景中竖直上升的祝福语时，只需要编辑下面这个数组。
+      var floatingWishPool = [
+        "平安喜乐，万事顺遂",
+        "好好吃饭，天天开心",
+        "前程似锦，一路繁花",
+        "温柔且坚定，知足且上进",
+        "二十而立，向阳而生",
+        "长路漫漫，未来可期",
+        "春去秋来二十载，岁岁年年皆胜意",
+        "孔明灯升，愿你前路皆明",
+        "前路漫漫亦灿灿"
+      ];
+
+      var laneDefinitions = [
+        { id: "left", min: 0.035, max: 0.22 },
+        { id: "left-middle", min: 0.235, max: 0.455 },
+        { id: "right-middle", min: 0.545, max: 0.765 },
+        { id: "right", min: 0.78, max: 0.965 }
+      ];
+
+      var layerOrder = ["far", "mid", "near"];
+      var layerConfig = {
+        far: {
+          size: [24, 42], opacity: [0.52, 0.72], brightness: [1, 1.1],
+          blur: [0.35, 0.8], alphaFloor: 0.3, speed: [0.039, 0.047], glow: [0.28, 0.43],
+          driftX: [0.000006, 0.000014], driftY: [0.0000015, 0.000004],
+          glowRadius: [0.7, 0.82], sway: [0.004, 0.01], point: [0.28, 0.4]
+        },
+        mid: {
+          size: [48, 74], opacity: [0.78, 0.93], brightness: [1.06, 1.16],
+          blur: [0.08, 0.24], alphaFloor: 0.48, speed: [0.052, 0.064], glow: [0.52, 0.74],
+          driftX: [0.000008, 0.000021], driftY: [0.000002, 0.000006],
+          glowRadius: [0.82, 0.96], sway: [0.006, 0.014], point: [0.4, 0.54]
+        },
+        near: {
+          size: [84, 118], opacity: [0.94, 1], brightness: [1.12, 1.22],
+          blur: [0, 0.06], alphaFloor: 0.66, speed: [0.068, 0.082], glow: [0.84, 1.04],
+          driftX: [0.00001, 0.000028], driftY: [0.0000025, 0.000007],
+          glowRadius: [0.96, 1.1], sway: [0.006, 0.016], point: [0.52, 0.66]
+        }
+      };
+
+      var distributionManager = {
+        nextAuditAt: 0,
+        nextSpawnAt: 0,
+        lastSpawnAt: -Infinity,
+        lastSpawnLane: -1,
+        laneLastSpawnAt: [0, 0, 0, 0],
+        laneEmptySince: [0, 0, 0, 0],
+        priorityLane: -1,
+        priorityLayer: null,
+        warmSpawnsRemaining: 2,
+        warmLayerCursor: 0,
+        lastSnapshot: null,
+        spawnLog: [],
+        recycleLog: []
+      };
+
+      function seededUnit() {
+        randomState += 0x6D2B79F5;
+        var value = randomState;
+        value = Math.imul(value ^ value >>> 15, value | 1);
+        value ^= value + Math.imul(value ^ value >>> 7, value | 61);
+        return ((value ^ value >>> 14) >>> 0) / 4294967296;
+      }
+
+      function random(min, max) {
+        return min + seededUnit() * (max - min);
+      }
+
+      function clamp(value, min, max) {
+        return Math.max(min, Math.min(max, value));
+      }
+
+      function smoothstep(edge0, edge1, value) {
+        var progress = clamp((value - edge0) / (edge1 - edge0), 0, 1);
+        return progress * progress * (3 - 2 * progress);
+      }
+
+      function shuffleItems(items) {
+        var shuffled = items.slice();
+        for (var index = shuffled.length - 1; index > 0; index -= 1) {
+          var swapIndex = Math.floor(Math.random() * (index + 1));
+          var value = shuffled[index];
+          shuffled[index] = shuffled[swapIndex];
+          shuffled[swapIndex] = value;
+        }
+        return shuffled;
+      }
+
+      function floatingWishTarget() {
+        return mobileMode ? 3 : 4;
+      }
+
+      function refillFloatingWishQueue() {
+        floatingWishQueue = shuffleItems(floatingWishPool);
+      }
+
+      function nextFloatingWishText(currentWish) {
+        var usedTexts = floatingWishes.filter(function (wish) {
+          return wish !== currentWish && wish.active;
+        }).map(function (wish) { return wish.text; });
+
+        if (!floatingWishQueue.length) refillFloatingWishQueue();
+        for (var index = 0; index < floatingWishQueue.length; index += 1) {
+          var text = floatingWishQueue[index];
+          if (usedTexts.indexOf(text) === -1) {
+            floatingWishQueue.splice(index, 1);
+            return text;
+          }
+        }
+
+        var available = shuffleItems(floatingWishPool.filter(function (text) {
+          return usedTexts.indexOf(text) === -1;
+        }));
+        return available[0] || "";
+      }
+
+      function chooseFloatingWishX(currentWish) {
+        // Use the broad interior of the viewport. The old triangular random
+        // distribution favored the center and made wishes stack together.
+        var insetRatio = mobileMode ? 0.1 : 0.08;
+        var minimumX = width * insetRatio;
+        var maximumX = width * (1 - insetRatio);
+        var availableWidth = Math.max(1, maximumX - minimumX);
+        var currentHeight = currentWish.element.offsetHeight || currentWish.text.length * (mobileMode ? 16 : 18);
+        var preferredGap = Math.min(mobileMode ? 100 : 300, width * (mobileMode ? 0.2 : 0.18));
+        var bestX = minimumX + availableWidth * 0.5;
+        var bestScore = -Infinity;
+        for (var attempt = 0; attempt < 72; attempt += 1) {
+          var candidate = minimumX + Math.random() * availableWidth;
+          var separationPenalty = 0;
+          var minimumHorizontalGap = availableWidth;
+          floatingWishes.forEach(function (wish) {
+            if (wish === currentWish || !wish.active) return;
+            var horizontalGap = Math.abs(wish.x - candidate);
+            var otherHeight = wish.element.offsetHeight || wish.text.length * (mobileMode ? 16 : 18);
+            var verticalGap = Math.abs(wish.y - currentWish.y) * height;
+            var nearbyRange = (currentHeight + otherHeight) * 0.5 + (mobileMode ? 28 : 38);
+            var verticalProximity = 1 - clamp(verticalGap / Math.max(1, nearbyRange), 0, 1);
+            minimumHorizontalGap = Math.min(minimumHorizontalGap, horizontalGap);
+            if (horizontalGap < preferredGap) {
+              separationPenalty += verticalProximity * (1 - horizontalGap / preferredGap) * 240;
+            }
+            if (horizontalGap < preferredGap * 0.42) {
+              separationPenalty += (1 - horizontalGap / (preferredGap * 0.42)) * 30;
+            }
+          });
+          var spacingBonus = Math.min(minimumHorizontalGap, preferredGap) / preferredGap * 30;
+          var edgeClearance = Math.min(candidate - minimumX, maximumX - candidate) / Math.max(1, availableWidth * 0.5);
+          var edgeBonus = clamp(edgeClearance, 0, 1) * 2;
+          var score = spacingBonus + edgeBonus - separationPenalty + Math.random() * 18;
+          if (score > bestScore) {
+            bestScore = score;
+            bestX = candidate;
+          }
+        }
+        return bestX;
+      }
+
+      function floatingWishSafeFactor(wish, centerY) {
+        if (!safeRect) return 1;
+        var textHeight = wish.element.offsetHeight || wish.text.length * (mobileMode ? 16 : 18);
+        var halfWidth = mobileMode ? 8 : 10;
+        var top = centerY - textHeight * 0.5;
+        var bottom = centerY + textHeight * 0.5;
+        if (!rectsOverlap(wish.x - halfWidth, top, wish.x + halfWidth, bottom, safeRect)) return 1;
+        var overlapHeight = Math.max(0, Math.min(bottom, safeRect.bottom) - Math.max(top, safeRect.top));
+        var overlapRatio = clamp(overlapHeight / Math.max(1, textHeight), 0, 1);
+        return 1 - overlapRatio * 0.56;
+      }
+
+      function chooseFloatingWishY(currentWish, initialY) {
+        if (typeof initialY === "number") return initialY;
+        var candidate = 1.08 + Math.random() * 0.08;
+        var minimumGap = mobileMode ? 0.18 : 0.16;
+        var lowerWishes = floatingWishes.filter(function (wish) {
+          return wish !== currentWish && wish.active && wish.y > 0.72;
+        }).sort(function (a, b) { return a.y - b.y; });
+
+        lowerWishes.forEach(function (wish) {
+          if (Math.abs(candidate - wish.y) < minimumGap) {
+            candidate = wish.y + minimumGap + Math.random() * 0.04;
+          }
+        });
+        return candidate;
+      }
+
+      function resetFloatingWish(wish, initialY) {
+        wish.text = nextFloatingWishText(wish);
+        wish.element.textContent = wish.text;
+        wish.active = true;
+        wish.y = chooseFloatingWishY(wish, initialY);
+        wish.x = chooseFloatingWishX(wish);
+        wish.speed = (mobileMode ? 0.038 : 0.043) + Math.random() * (mobileMode ? 0.013 : 0.016);
+        wish.baseOpacity = 0.78 + Math.random() * 0.18;
+        wish.element.style.opacity = "0";
+      }
+
+      function initializeFloatingWishes() {
+        floatingWishes.forEach(function (wish) { wish.element.remove(); });
+        floatingWishes.length = 0;
+        refillFloatingWishQueue();
+        var initialHeights = mobileMode ? [0.16, 0.52, 0.88] : [0.12, 0.4, 0.68, 0.96];
+        shuffleItems(initialHeights).slice(0, floatingWishTarget()).forEach(function (baseY) {
+          var element = document.createElement("p");
+          element.className = "floating-wish";
+          floatingWishesLayer.appendChild(element);
+          var wish = { element: element, active: false, text: "", x: 0, y: 0, speed: 0, baseOpacity: 1 };
+          floatingWishes.push(wish);
+          resetFloatingWish(wish, clamp(baseY + (Math.random() - 0.5) * 0.07, 0.06, 0.98));
+        });
+      }
+
+      function updateFloatingWishes(delta) {
+        floatingWishes.forEach(function (wish) {
+          wish.y -= wish.speed * delta * 0.001;
+          var textHeight = wish.element.offsetHeight || wish.text.length * (mobileMode ? 16 : 18);
+          var exitY = -textHeight / Math.max(1, height) * 0.5 - 0.035;
+          if (wish.y < exitY) resetFloatingWish(wish);
+
+          var centerY = wish.y * height;
+          var bottomFade = 1 - smoothstep(1, 1.15, wish.y);
+          var topFade = smoothstep(exitY, 0.13, wish.y);
+          var safeFactor = floatingWishSafeFactor(wish, centerY);
+          var opacity = clamp(wish.baseOpacity * bottomFade * topFade * safeFactor, 0, 0.96);
+          wish.element.style.transform = "translate3d(" + wish.x.toFixed(1) + "px, " + centerY.toFixed(1) + "px, 0) translate(-50%, -50%)";
+          wish.element.style.opacity = String(opacity);
+        });
+      }
+
+      function targetsForViewport() {
+        return mobileMode
+          ? {
+              target: { far: 8, mid: 4, near: 2 },
+              minimum: { far: 7, mid: 3, near: 1 },
+              maximum: { far: 10, mid: 5, near: 2 },
+              laneMinimum: width < 390 ? 1 : 2
+            }
+          : {
+              target: { far: 12, mid: 6, near: 3 },
+              minimum: { far: 10, mid: 5, near: 2 },
+              maximum: { far: 14, mid: 8, near: 3 },
+              laneMinimum: 3
+            };
+      }
+
+      function activeLanterns() {
+        return lanterns.filter(function (lantern) { return lantern.state === "active"; });
+      }
+
+      function visibleLanterns() {
+        return lanterns.filter(function (lantern) {
+          return lantern.state === "active" && lantern.y > -0.31 && lantern.y < 1.035;
+        });
+      }
+
+      function countByLayer(items) {
+        var counts = { far: 0, mid: 0, near: 0 };
+        items.forEach(function (lantern) { counts[lantern.layer] += 1; });
+        return counts;
+      }
+
+      function countByLane(items) {
+        var counts = [0, 0, 0, 0];
+        items.forEach(function (lantern) { counts[lantern.lane] += 1; });
+        return counts;
+      }
+
+      function computeSafeRect() {
+        var screen = document.querySelector(".screen.is-active:not([hidden])") || document.querySelector(".screen.is-active");
+        if (!screen) return { left: width * 0.28, right: width * 0.72, top: height * 0.18, bottom: height * 0.84 };
+
+        var selectors = "h1, .eyebrow, .intro, .primary-button, .blessing__label, .blessing__text, .signature";
+        var elements = Array.prototype.slice.call(screen.querySelectorAll(selectors)).filter(function (element) {
+          var rect = element.getBoundingClientRect();
+          return rect.width > 0 && rect.height > 0;
+        });
+        if (!elements.length) elements = [screen];
+
+        var left = width;
+        var right = 0;
+        var top = height;
+        var bottom = 0;
+        elements.forEach(function (element) {
+          var rect = element.getBoundingClientRect();
+          left = Math.min(left, rect.left);
+          right = Math.max(right, rect.right);
+          top = Math.min(top, rect.top);
+          bottom = Math.max(bottom, rect.bottom);
+        });
+        var horizontalPadding = mobileMode ? 12 : 28;
+        var verticalPadding = mobileMode ? 14 : 24;
+        return {
+          left: clamp(left - horizontalPadding, 0, width),
+          right: clamp(right + horizontalPadding, 0, width),
+          top: clamp(top - verticalPadding, 0, height),
+          bottom: clamp(bottom + verticalPadding, 0, height)
+        };
+      }
+
+      function refreshSafeRect() {
+        safeRect = computeSafeRect();
+      }
+
+      function rectsOverlap(leftA, topA, rightA, bottomA, rectB) {
+        return leftA < rectB.right && rightA > rectB.left && topA < rectB.bottom && bottomA > rectB.top;
+      }
+
+      function lanternSafeAttenuation(lantern, x, y, size) {
+        if (!safeRect) return 1;
+        var radius = size * (lantern.layer === "near" ? 0.46 : 0.4);
+        var left = x - radius;
+        var right = x + radius;
+        var top = y - radius;
+        var bottom = y + radius;
+        if (!rectsOverlap(left, top, right, bottom, safeRect)) return 1;
+
+        // Keep the text area readable without abruptly dimming a lantern when it crosses it.
+        var overlapWidth = Math.max(0, Math.min(right, safeRect.right) - Math.max(left, safeRect.left));
+        var overlapHeight = Math.max(0, Math.min(bottom, safeRect.bottom) - Math.max(top, safeRect.top));
+        var overlapRatio = clamp((overlapWidth * overlapHeight) / Math.max(1, (right - left) * (bottom - top)), 0, 1);
+        var maximumReduction = lantern.layer === "far" ? 0.08 : (lantern.layer === "mid" ? 0.14 : 0.2);
+        return 1 - overlapRatio * maximumReduction;
+      }
+
+      function laneAllowedForLayer(lane, layer) {
+        return layer !== "near" || lane === 0 || lane === 3;
+      }
+
+      function xCandidatesForLane(lane) {
+        var definition = laneDefinitions[lane];
+        var span = definition.max - definition.min;
+        var offsets = [0.5, 0.27, 0.73, 0.14, 0.86, 0.39, 0.61];
+        var rotation = Math.floor(random(0, offsets.length));
+        return offsets.map(function (_, index) {
+          return definition.min + span * offsets[(index + rotation) % offsets.length] + random(-0.006, 0.006);
+        });
+      }
+
+      function chooseSpawnX(lane, layer, y, size) {
+        var candidates = xCandidatesForLane(lane);
+        var bestX = candidates[0];
+        var bestClearance = -Infinity;
+        var buttonRect = musicButton.getBoundingClientRect();
+        candidates.forEach(function (candidate) {
+          var candidateX = clamp(candidate, laneDefinitions[lane].min, laneDefinitions[lane].max);
+          var xPixels = candidateX * width;
+          var yPixels = y * height;
+          var blockedByButton = y > 0.84 && rectsOverlap(
+            xPixels - size * 0.55,
+            yPixels - size * 0.55,
+            xPixels + size * 0.55,
+            yPixels + size * 0.55,
+            {
+              left: buttonRect.left - 18,
+              right: buttonRect.right + 18,
+              top: buttonRect.top - 20,
+              bottom: buttonRect.bottom + 24
+            }
+          );
+          if (blockedByButton) return;
+
+          var clearance = Infinity;
+          activeLanterns().forEach(function (other) {
+            if (other.y < 0.68 || Math.abs(other.y - y) > 0.28) return;
+            var dx = (other.x - candidateX) * width;
+            var dy = (other.y - y) * height;
+            clearance = Math.min(clearance, Math.sqrt(dx * dx + dy * dy) - (other.size + size) * 0.42);
+          });
+          if (clearance > bestClearance) {
+            bestClearance = clearance;
+            bestX = candidateX;
+          }
+        });
+        return clamp(bestX, laneDefinitions[lane].min, laneDefinitions[lane].max);
+      }
+
+      function layerDepth(layer) {
+        return layerOrder.indexOf(layer);
+      }
+
+      function applyLanternParameters(lantern, layer, lane, y, time) {
+        var config = layerConfig[layer];
+        var size = random(config.size[0], config.size[1]);
+        lantern.id = lantern.id || ++lanternId;
+        lantern.layer = layer;
+        lantern.depth = layerDepth(layer);
+        lantern.lane = lane;
+        lantern.sector = laneDefinitions[lane].id;
+        lantern.y = y;
+        lantern.size = size;
+        lantern.x = chooseSpawnX(lane, layer, y, size);
+        lantern.speed = random(config.speed[0], config.speed[1]);
+        lantern.speedBias = 1;
+        lantern.targetSpeedBias = 1;
+        lantern.scale = random(0.96, 1.04);
+        lantern.opacity = random(config.opacity[0], config.opacity[1]);
+        lantern.brightness = random(config.brightness[0], config.brightness[1]);
+        lantern.blur = random(config.blur[0], config.blur[1]);
+        lantern.alphaFloor = config.alphaFloor;
+        lantern.glowStrength = random(config.glow[0], config.glow[1]);
+        lantern.glowRadius = random(config.glowRadius[0], config.glowRadius[1]);
+        lantern.pointStrength = random(config.point[0], config.point[1]);
+        lantern.swayAmount = random(config.sway[0], config.sway[1]);
+        lantern.swaySpeed = random(0.62, 1.05);
+        lantern.phase = random(0, Math.PI * 2);
+        lantern.driftX = random(config.driftX[0], config.driftX[1]);
+        lantern.driftY = random(config.driftY[0], config.driftY[1]);
+        lantern.driftSpeed = random(0.16, 0.34);
+        lantern.driftPhase = random(0, Math.PI * 2);
+        lantern.liftSpeed = random(0.38, 0.68);
+        lantern.liftPhase = random(0, Math.PI * 2);
+        lantern.liftAmount = random(0.045, 0.09);
+        lantern.vx = random(-lantern.driftX, lantern.driftX) * 0.35;
+        lantern.rotationPhase = random(0, Math.PI * 2);
+        lantern.rotationSpeed = random(0.22, 0.46);
+        lantern.rotationAmount = random(0.7, 2.8) * Math.PI / 180;
+        lantern.trail = random(0.52, 0.92);
+        lantern.lifetime = Math.max(0, (1.04 - y) / lantern.speed * 1000);
+        lantern.spawnTime = time - lantern.lifetime;
+        lantern.lastVisibleTime = y < 1.035 ? time : 0;
+        lantern.state = "active";
+        lantern.recycleAt = 0;
+        lantern.currentX = lantern.x * width;
+        lantern.currentY = lantern.y * height;
+        lantern.renderAlpha = 0;
+        return lantern;
+      }
+
+      function createLantern(layer, lane, y, time) {
+        return applyLanternParameters({}, layer, lane, y, time);
+      }
+
+      function initialTemplate() {
+        if (mobileMode) {
+          return [
+            { y: -0.16, layer: "far" },
+            { y: 0.14, layer: "far" }, { y: 0.23, layer: "mid" },
+            { y: 0.32, layer: "far" }, { y: 0.4, layer: "far" },
+            { y: 0.46, layer: "far" }, { y: 0.54, layer: "mid" },
+            { y: 0.62, layer: "far" }, { y: 0.7, layer: "near" },
+            { y: 0.77, layer: "far" },
+            { y: 0.83, layer: "mid" }, { y: 0.91, layer: "near" },
+            { y: 0.99, layer: "far" }, { y: 1.05, layer: "mid" }
+          ];
+        }
+        return [
+          { y: -0.18, layer: "far" }, { y: -0.07, layer: "mid" },
+          { y: 0.12, layer: "far" }, { y: 0.18, layer: "far" },
+          { y: 0.25, layer: "mid" }, { y: 0.31, layer: "far" },
+          { y: 0.37, layer: "far" }, { y: 0.43, layer: "mid" },
+          { y: 0.46, layer: "far" }, { y: 0.51, layer: "mid" },
+          { y: 0.56, layer: "far" }, { y: 0.61, layer: "near" },
+          { y: 0.66, layer: "far" }, { y: 0.71, layer: "mid" },
+          { y: 0.75, layer: "far" }, { y: 0.79, layer: "far" },
+          { y: 0.83, layer: "near" }, { y: 0.9, layer: "far" },
+          { y: 0.97, layer: "mid" }, { y: 1.02, layer: "near" },
+          { y: 1.06, layer: "far" }
+        ];
+      }
+
+      function initialLaneFor(index, layer, laneCounts) {
+        var lanePattern = [0, 3, 1, 2, 0, 3, 2, 1, 3, 0, 2, 1, 0, 3, 1, 2, 0, 3, 2, 1, 0];
+        var preferred = lanePattern[index % lanePattern.length];
+        if (layer !== "near") return preferred;
+        return laneCounts[0] <= laneCounts[3] ? 0 : 3;
+      }
+
+      function createStar(index, total) {
+        var lane = index % laneDefinitions.length;
+        var definition = laneDefinitions[lane];
+        var row = Math.floor(index / laneDefinitions.length);
+        var rowCount = Math.ceil(total / laneDefinitions.length);
+        return {
+          lane: lane,
+          x: random(definition.min + 0.015, definition.max - 0.015),
+          y: clamp((row + 0.38 + random(-0.18, 0.18)) / rowCount, 0.035, 0.96),
+          radius: random(0.5, 1.25),
+          alpha: random(0.28, 0.72),
+          phase: random(0, Math.PI * 2),
+          speed: random(0.6, 1.4)
+        };
+      }
+
+      function createParticle(index) {
+        var lane = index % laneDefinitions.length;
+        var definition = laneDefinitions[lane];
+        return {
+          x: random(definition.min, definition.max),
+          y: random(0.03, 1),
+          radius: random(0.45, 1.4),
+          alpha: random(0.16, 0.48),
+          drift: random(-0.00001, 0.00001),
+          phase: random(0, Math.PI * 2)
+        };
+      }
+
+      function resizeCanvas() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        pixelRatio = Math.min(window.devicePixelRatio || 1, width < 560 ? 1.25 : 1.5);
+        canvas.width = Math.round(width * pixelRatio);
+        canvas.height = Math.round(height * pixelRatio);
+        canvas.style.width = width + "px";
+        canvas.style.height = height + "px";
+        context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+        refreshSafeRect();
+        var wishInsetRatio = 0.09;
+        floatingWishes.forEach(function (wish) {
+          wish.x = clamp(wish.x, width * wishInsetRatio, width * (1 - wishInsetRatio));
+        });
+      }
+
+      function drawSky(time, delta, risingProgress) {
+        context.clearRect(0, 0, width, height);
+        var skyMood = 1 + (document.body.classList.contains("scene-rising") ? 0.5 : 0);
+        if (document.body.classList.contains("scene-blessing")) skyMood = Math.max(skyMood, 1.25);
+
+        var upperAtmosphere = context.createRadialGradient(width * 0.76, height * 0.14, 0, width * 0.76, height * 0.14, width * 0.48);
+        upperAtmosphere.addColorStop(0, "rgba(120, 96, 180, " + (0.05 * skyMood) + ")");
+        upperAtmosphere.addColorStop(0.58, "rgba(47, 41, 86, " + (0.022 * skyMood) + ")");
+        upperAtmosphere.addColorStop(1, "rgba(32, 28, 58, 0)");
+        context.fillStyle = upperAtmosphere;
+        context.fillRect(0, 0, width, height);
+
+        var lowerWarmth = context.createRadialGradient(width * 0.72, height * 1.04, 0, width * 0.72, height * 1.04, width * 0.55);
+        lowerWarmth.addColorStop(0, "rgba(255, 176, 104, 0.045)");
+        lowerWarmth.addColorStop(0.52, "rgba(220, 130, 92, 0.018)");
+        lowerWarmth.addColorStop(1, "rgba(220, 130, 92, 0)");
+        context.fillStyle = lowerWarmth;
+        context.fillRect(0, 0, width, height);
+
+        // A restrained violet haze gives the still photograph a little depth
+        // without competing with the readable foreground copy.
+        var hazePulse = 0.84 + Math.sin(time * 0.00022) * 0.16;
+        var violetHaze = context.createRadialGradient(width * 0.48, height * 0.57, 0, width * 0.48, height * 0.57, width * 0.72);
+        violetHaze.addColorStop(0, "rgba(153, 111, 214, " + (0.028 * hazePulse * skyMood) + ")");
+        violetHaze.addColorStop(0.52, "rgba(105, 73, 164, " + (0.012 * hazePulse * skyMood) + ")");
+        violetHaze.addColorStop(1, "rgba(71, 48, 116, 0)");
+        context.fillStyle = violetHaze;
+        context.fillRect(0, 0, width, height);
+
+        stars.forEach(function (star) {
+          var pulse = 0.78 + Math.sin(time * 0.001 * star.speed + star.phase) * 0.22;
+          context.beginPath();
+          context.arc(star.x * width, star.y * height, star.radius, 0, Math.PI * 2);
+          context.fillStyle = "rgba(230, 228, 255, " + (star.alpha * pulse * 0.56 * skyMood) + ")";
+          context.fill();
+        });
+
+        particles.forEach(function (particle) {
+          particle.y -= 0.000016 * delta;
+          particle.x += particle.drift * delta;
+          if (particle.y < -0.02) particle.y = 1.02;
+          if (particle.x < -0.02) particle.x = 1.02;
+          if (particle.x > 1.02) particle.x = -0.02;
+          context.beginPath();
+          context.arc(particle.x * width, particle.y * height, particle.radius, 0, Math.PI * 2);
+          context.fillStyle = "rgba(255, 202, 127, " + (particle.alpha * 0.62 * skyMood) + ")";
+          context.fill();
+        });
+
+        updateTransitionDust(time, risingProgress || 0);
+      }
+
+      function updateTransitionDust(time, risingProgress) {
+        if (risingProgress <= 0 || risingProgress >= 1) {
+          transitionDust = [];
+          return;
+        }
+        if (time - lastDustSpawn > 14 && transitionDust.length < (mobileMode ? 130 : 220)) {
+          var spread = Math.random() * 0.52;
+          var angle = Math.random() * Math.PI * 2;
+          var bx = width * (0.5 + Math.cos(angle) * spread * 0.9);
+          var by = height * (0.5 + Math.sin(angle) * spread * 0.9);
+          var outAngle = Math.atan2(by - height * 0.5, bx - width * 0.5) + (Math.random() - 0.5) * 0.55;
+          var depthRoll = Math.random();
+          var depth = depthRoll < 0.32 ? "near" : (depthRoll < 0.72 ? "mid" : "far");
+          var speed = depth === "near" ? (210 + Math.random() * 160) : (depth === "mid" ? (130 + Math.random() * 90) : (70 + Math.random() * 60));
+          var size = depth === "near" ? (0.9 + Math.random() * 0.8) : (depth === "mid" ? (0.55 + Math.random() * 0.45) : (0.32 + Math.random() * 0.28));
+          var trail = depth === "near" ? (1.6 + Math.random() * 0.8) : (depth === "mid" ? (0.7 + Math.random() * 0.5) : (0.12 + Math.random() * 0.2));
+          transitionDust.push({
+            x: bx,
+            y: by,
+            baseAngle: outAngle,
+            speed: speed * (mobileMode ? 0.82 : 1),
+            size: size * (mobileMode ? 0.9 : 1),
+            trail: trail,
+            alpha: 0.18 + Math.random() * 0.4,
+            born: time,
+            life: 500 + Math.random() * 800
+          });
+          lastDustSpawn = time;
+        }
+        for (var i = transitionDust.length - 1; i >= 0; i -= 1) {
+          var d = transitionDust[i];
+          var age = time - d.born;
+          if (age > d.life) {
+            transitionDust.splice(i, 1);
+            continue;
+          }
+          var t = age / d.life;
+          var focusBlend = clamp(1 - Math.abs(risingProgress - 0.5) / 0.2, 0, 1);
+          var cameraAngle = -0.32;
+          var flowAngle = d.baseAngle + (cameraAngle - d.baseAngle) * focusBlend;
+          d.x += Math.cos(flowAngle) * d.speed * 0.016;
+          d.y += Math.sin(flowAngle) * d.speed * 0.016;
+          var a = d.alpha * (1 - t);
+          var stretch = 1 + Math.max(0, 1 - Math.abs(risingProgress - 0.5) * 4) * 0.8;
+          context.strokeStyle = "rgba(255, 224, 175," + (a * 0.55) + ")";
+          context.lineWidth = d.size * 0.5;
+          context.beginPath();
+          context.moveTo(d.x, d.y);
+          context.lineTo(d.x - Math.cos(flowAngle) * d.speed * 0.05 * d.trail * stretch, d.y - Math.sin(flowAngle) * d.speed * 0.05 * d.trail * stretch);
+          context.stroke();
+          context.fillStyle = "rgba(255, 240, 205," + a + ")";
+          context.beginPath();
+          context.arc(d.x, d.y, d.size, 0, Math.PI * 2);
+          context.fill();
+        }
+      }
+
+      function drawLantern(lantern, time, risingProgress) {
+        if (lantern.state !== "active") return;
+        var sway = Math.sin(time * 0.001 * lantern.swaySpeed + lantern.phase) * width * lantern.swayAmount * 0.34;
+        var x = lantern.x * width + sway;
+        var y = lantern.y * height;
+        var travelProgress = clamp((1.06 - lantern.y) / 1.38, 0, 1);
+        var travelScale = 1 - travelProgress * 0.43;
+        var travelOpacity = 1 - travelProgress * 0.08;
+        var travelBrightness = 1 - travelProgress * 0.04;
+        var travelGlow = 1 - travelProgress * 0.42;
+        var spawnFade = 1 - smoothstep(1.025, 1.15, lantern.y);
+        var bodyFade = smoothstep(-0.25, -0.055, lantern.y) * spawnFade;
+        var sparkBlend = (1 - smoothstep(-0.24, -0.055, lantern.y)) * smoothstep(-0.34, -0.27, lantern.y);
+        var responsiveScale = mobileMode ? Math.min(width / 390, 1) : Math.min(width / 900, 1.08);
+        var imageSize = lantern.size * lantern.scale * responsiveScale * travelScale;
+        imageSize *= 1 - (risingProgress || 0) * 0.35;
+        var safeAttenuation = lanternSafeAttenuation(lantern, x, y, imageSize);
+        var baseAlpha = lantern.opacity * travelOpacity * safeAttenuation * (1 - (risingProgress || 0) * 0.5);
+        var alpha = Math.max(baseAlpha, lantern.alphaFloor) * bodyFade;
+        var glowFloor = lantern.layer === "far" ? 0.02 : 0;
+        var glowAlpha = lantern.glowStrength * travelGlow * bodyFade * Math.max(glowFloor, safeAttenuation);
+        var rotation = Math.sin(time * 0.001 * lantern.rotationSpeed + lantern.rotationPhase) * lantern.rotationAmount;
+        var halfSize = imageSize * 0.5;
+
+        lantern.currentX = x;
+        lantern.currentY = y;
+        lantern.renderAlpha = alpha;
+
+        context.save();
+        context.globalAlpha = glowAlpha;
+        var outerGlow = context.createRadialGradient(x, y + imageSize * 0.16, imageSize * 0.06, x, y + imageSize * 0.16, imageSize * lantern.glowRadius);
+        outerGlow.addColorStop(0, "rgba(255, 224, 151, 0.16)");
+        outerGlow.addColorStop(0.36, "rgba(255, 184, 92, 0.075)");
+        outerGlow.addColorStop(0.72, "rgba(226, 137, 61, 0.025)");
+        outerGlow.addColorStop(1, "rgba(226, 137, 61, 0)");
+        context.fillStyle = outerGlow;
+        context.beginPath();
+        context.arc(x, y + imageSize * 0.16, imageSize * lantern.glowRadius, 0, Math.PI * 2);
+        context.fill();
+
+        var innerGlow = context.createRadialGradient(x, y + imageSize * 0.2, 1, x, y + imageSize * 0.2, imageSize * 0.44);
+        innerGlow.addColorStop(0, "rgba(255, 239, 183, 0.3)");
+        innerGlow.addColorStop(0.44, "rgba(255, 190, 91, 0.11)");
+        innerGlow.addColorStop(1, "rgba(255, 145, 39, 0)");
+        context.fillStyle = innerGlow;
+        context.beginPath();
+        context.arc(x, y + imageSize * 0.2, imageSize * 0.44, 0, Math.PI * 2);
+        context.fill();
+
+        context.globalAlpha = alpha;
+        context.strokeStyle = "rgba(255, 192, 92, " + (0.08 * lantern.trail) + ")";
+        context.lineWidth = 0.8;
+        context.beginPath();
+        context.moveTo(x, y + imageSize * 0.36);
+        context.lineTo(x - lantern.vx * width * 260, y + imageSize * 0.64);
+        context.stroke();
+
+        if (lanternImageReady && alpha > 0.008) {
+          context.filter = "brightness(" + (lantern.brightness * travelBrightness) + ") blur(" + (lantern.blur + travelProgress * 0.08) + "px)";
+          context.translate(x, y);
+          context.rotate(rotation);
+          context.drawImage(lanternImage, -halfSize, -halfSize, imageSize, imageSize);
+          context.filter = "none";
+        }
+        context.restore();
+
+        if (sparkBlend > 0.001) {
+          context.save();
+          var pointRadius = Math.max(1.3, imageSize * 0.07);
+          context.globalAlpha = sparkBlend * lantern.pointStrength;
+          var pointGlow = context.createRadialGradient(x, y + imageSize * 0.12, 0.5, x, y + imageSize * 0.12, pointRadius * 3.4);
+          pointGlow.addColorStop(0, "rgba(255, 234, 164, 0.86)");
+          pointGlow.addColorStop(0.42, "rgba(255, 179, 65, 0.32)");
+          pointGlow.addColorStop(1, "rgba(255, 142, 34, 0)");
+          context.fillStyle = pointGlow;
+          context.beginPath();
+          context.arc(x, y + imageSize * 0.12, pointRadius * 3.4, 0, Math.PI * 2);
+          context.fill();
+          context.fillStyle = "rgba(255, 231, 153, 0.94)";
+          context.beginPath();
+          context.arc(x, y + imageSize * 0.12, pointRadius, 0, Math.PI * 2);
+          context.fill();
+          context.restore();
+        }
+      }
+
+      function markLanternForRecycle(lantern, time) {
+        if (lantern.state !== "active") return;
+        lantern.state = "cooldown";
+        lantern.recycleAt = time + random(280, 760);
+        distributionManager.recycleLog.push({ id: lantern.id, layer: lantern.layer, lane: lantern.lane, time: Math.round(time) });
+        if (distributionManager.recycleLog.length > 80) distributionManager.recycleLog.shift();
+      }
+
+      function updateLantern(lantern, time, delta) {
+        if (lantern.state !== "active") return;
+        var travelProgress = clamp((1.06 - lantern.y) / 1.38, 0, 1);
+        var seconds = time * 0.001;
+        var targetVx = Math.sin(seconds * lantern.driftSpeed + lantern.driftPhase) * lantern.driftX;
+        lantern.vx += (targetVx - lantern.vx) * Math.min(1, delta / 1800);
+        lantern.x += lantern.vx * delta;
+        // Let a lantern continue beyond either edge instead of bouncing back.
+        // It is recycled only after it has naturally left the visible frame.
+        if (lantern.x < -0.16 || lantern.x > 1.16) {
+          markLanternForRecycle(lantern, time);
+          return;
+        }
+        var speedFactor = (1 - travelProgress * 0.12) +
+          Math.sin(seconds * lantern.liftSpeed + lantern.liftPhase) * lantern.liftAmount;
+        speedFactor = clamp(speedFactor, 0.78, 1.08);
+        lantern.speedBias += (lantern.targetSpeedBias - lantern.speedBias) * Math.min(1, delta / 720);
+        lantern.y -= lantern.speed * lantern.speedBias * speedFactor * delta * 0.001;
+        lantern.y += Math.cos(seconds * lantern.liftSpeed * 0.72 + lantern.liftPhase) * lantern.driftY * delta;
+        lantern.lifetime += delta;
+        if (lantern.y < 1.035 && lantern.y > -0.31) lantern.lastVisibleTime = time;
+        if (lantern.y < -0.345) markLanternForRecycle(lantern, time);
+      }
+
+      function largestVerticalGap(items, lane) {
+        var positions = items.filter(function (lantern) {
+          return lantern.lane === lane && lantern.y >= 0 && lantern.y <= 1;
+        }).map(function (lantern) { return lantern.y; }).sort(function (a, b) { return a - b; });
+        if (!positions.length) return 1;
+        var largest = positions[0];
+        for (var index = 1; index < positions.length; index += 1) {
+          largest = Math.max(largest, positions[index] - positions[index - 1]);
+        }
+        return Math.max(largest, 1 - positions[positions.length - 1]);
+      }
+
+      function applyVerticalSpacingControl(visible) {
+        activeLanterns().forEach(function (lantern) { lantern.targetSpeedBias = 1; });
+        laneDefinitions.forEach(function (_, lane) {
+          var laneLanterns = visible.filter(function (lantern) {
+            return lantern.lane === lane && lantern.y >= -0.06 && lantern.y <= 1;
+          }).sort(function (a, b) { return a.y - b.y; });
+          if (!laneLanterns.length) return;
+
+          for (var index = 1; index < laneLanterns.length; index += 1) {
+            var upper = laneLanterns[index - 1];
+            var lower = laneLanterns[index];
+            var gap = lower.y - upper.y;
+            if (gap > 0.35) {
+              upper.targetSpeedBias = Math.min(upper.targetSpeedBias, 0.84);
+              lower.targetSpeedBias = Math.max(lower.targetSpeedBias, Math.min(1.2, 1.08 + (gap - 0.35) * 0.45));
+            }
+          }
+
+          var highest = laneLanterns[0];
+          var lowest = laneLanterns[laneLanterns.length - 1];
+          if (highest.y > 0.31) highest.targetSpeedBias = Math.max(highest.targetSpeedBias, 1.12);
+          if (lowest.y < 0.65) lowest.targetSpeedBias = Math.min(lowest.targetSpeedBias, 0.78);
+          if (laneLanterns.length > 1 && highest.y < 0.08 && laneLanterns[1].y - highest.y > 0.3) {
+            highest.targetSpeedBias = Math.min(highest.targetSpeedBias, 0.9);
+          }
+        });
+      }
+
+      function chooseLaneForSpawn(layer, requestedLane, time) {
+        var visible = visibleLanterns();
+        var active = activeLanterns();
+        var visibleCounts = countByLane(visible);
+        var activeCounts = countByLane(active);
+        var layerLaneCounts = [0, 0, 0, 0];
+        active.forEach(function (lantern) {
+          if (lantern.layer === layer) layerLaneCounts[lantern.lane] += 1;
+        });
+        var candidates = laneDefinitions.map(function (_, lane) { return lane; }).filter(function (lane) {
+          return laneAllowedForLayer(lane, layer);
+        });
+        var bestLane = candidates[0];
+        var bestScore = Infinity;
+        candidates.forEach(function (lane) {
+          var emptyDuration = distributionManager.laneEmptySince[lane]
+            ? (time - distributionManager.laneEmptySince[lane]) / 1000
+            : 0;
+          var score = visibleCounts[lane] * 4 + activeCounts[lane] * 1.4 + layerLaneCounts[lane] * 1.3;
+          score += Math.max(0, 1.4 - (time - distributionManager.laneLastSpawnAt[lane]) / 1000) * 2.4;
+          if (lane === distributionManager.lastSpawnLane) score += 2.8;
+          if (visible.length && visibleCounts[lane] / visible.length > 0.36) score += 8;
+          score -= Math.min(5, emptyDuration * 2.2);
+          score -= Math.max(0, largestVerticalGap(visible, lane) - 0.35) * 9;
+          if (lane === requestedLane) score -= 12;
+          score += random(0, 0.16);
+          if (score < bestScore) {
+            bestScore = score;
+            bestLane = lane;
+          }
+        });
+        return bestLane;
+      }
+
+      function chooseLayerForSpawn(requestedLayer, warmSpawn) {
+        var limits = targetsForViewport();
+        var counts = countByLayer(activeLanterns());
+        if (requestedLayer && counts[requestedLayer] < limits.maximum[requestedLayer]) return requestedLayer;
+        if (warmSpawn) {
+          var warmLayers = ["far", "mid"];
+          for (var warmIndex = 0; warmIndex < warmLayers.length; warmIndex += 1) {
+            var warmLayer = warmLayers[(distributionManager.warmLayerCursor + warmIndex) % warmLayers.length];
+            if (counts[warmLayer] < limits.maximum[warmLayer]) {
+              distributionManager.warmLayerCursor += 1;
+              return warmLayer;
+            }
+          }
+        }
+        var deficits = layerOrder.filter(function (layer) {
+          return counts[layer] < limits.target[layer];
+        });
+        if (deficits.length) {
+          deficits.sort(function (a, b) {
+            return (limits.target[b] - counts[b]) / limits.target[b] - (limits.target[a] - counts[a]) / limits.target[a];
+          });
+          return deficits[0];
+        }
+        return null;
+      }
+
+      function auditDistribution(time) {
+        refreshSafeRect();
+        var limits = targetsForViewport();
+        var visible = visibleLanterns();
+        var visibleLaneCounts = countByLane(visible);
+        var upcomingLaneCounts = [0, 0, 0, 0];
+        activeLanterns().forEach(function (lantern) {
+          if (lantern.y >= 1.035 && lantern.y <= 1.16) upcomingLaneCounts[lantern.lane] += 1;
+        });
+        var effectiveLaneCounts = visibleLaneCounts.map(function (count, lane) {
+          return count + upcomingLaneCounts[lane];
+        });
+        var visibleLayerCounts = countByLayer(visible);
+        var activeLayerCounts = countByLayer(activeLanterns());
+        var priorityLane = -1;
+        var worstScore = -Infinity;
+
+        visibleLaneCounts.forEach(function (count, lane) {
+          if (count === 0) {
+            if (!distributionManager.laneEmptySince[lane]) distributionManager.laneEmptySince[lane] = time;
+          } else {
+            distributionManager.laneEmptySince[lane] = 0;
+          }
+          var emptyDuration = distributionManager.laneEmptySince[lane] ? time - distributionManager.laneEmptySince[lane] : 0;
+          var gap = largestVerticalGap(visible, lane);
+          var recentlyFilled = Math.max(0, 1.6 - (time - distributionManager.laneLastSpawnAt[lane]) / 1000);
+          var score = Math.max(0, limits.laneMinimum - effectiveLaneCounts[lane]) * 5 + Math.max(0, gap - 0.35) * 8 + emptyDuration / 700;
+          score -= recentlyFilled * 4.4;
+          if (score > worstScore) {
+            worstScore = score;
+            priorityLane = lane;
+          }
+        });
+
+        distributionManager.priorityLane = worstScore > 0.8 ? priorityLane : -1;
+        distributionManager.priorityLayer = null;
+        layerOrder.forEach(function (layer) {
+          if (activeLayerCounts[layer] < limits.minimum[layer] && !distributionManager.priorityLayer) {
+            distributionManager.priorityLayer = layer;
+          }
+        });
+        distributionManager.lastSnapshot = {
+          time: Math.round(time),
+          visibleCount: visible.length,
+          activeCount: activeLanterns().length,
+          totalObjects: lanterns.length,
+          laneCounts: visibleLaneCounts,
+          upcomingLaneCounts: upcomingLaneCounts,
+          effectiveLaneCounts: effectiveLaneCounts,
+          layerCounts: visibleLayerCounts,
+          activeLayerCounts: activeLayerCounts,
+          verticalGaps: laneDefinitions.map(function (_, lane) { return Number(largestVerticalGap(visible, lane).toFixed(3)); })
+        };
+        applyVerticalSpacingControl(visible);
+        distributionManager.nextAuditAt = time + 250;
+      }
+
+      function spawnOneLantern(time, forceEmergency) {
+        var emergency = Boolean(forceEmergency);
+        var minimumGap = emergency ? 280 : 760;
+        if (time - distributionManager.lastSpawnAt < minimumGap) return false;
+
+        var ready = lanterns.filter(function (lantern) {
+          return lantern.state === "cooldown" && lantern.recycleAt <= time;
+        });
+        var warmSpawn = distributionManager.warmSpawnsRemaining > 0;
+        var requestedLayer = distributionManager.priorityLayer;
+        var layer = chooseLayerForSpawn(requestedLayer, warmSpawn);
+        if (!layer && ready.length) {
+          var limits = targetsForViewport();
+          var activeCounts = countByLayer(activeLanterns());
+          var preferredLayer = ready[0].layer;
+          if (activeCounts[preferredLayer] < limits.maximum[preferredLayer]) {
+            layer = preferredLayer;
+          } else {
+            layer = layerOrder.filter(function (candidate) {
+              return activeCounts[candidate] < limits.maximum[candidate];
+            }).sort(function (a, b) {
+              return activeCounts[a] / limits.maximum[a] - activeCounts[b] / limits.maximum[b];
+            })[0] || null;
+          }
+        }
+        if (!layer && !emergency) return false;
+        if (!layer && emergency) {
+          var limits = targetsForViewport();
+          var counts = countByLayer(activeLanterns());
+          layer = counts.far < limits.maximum.far ? "far" : (counts.mid < limits.maximum.mid ? "mid" : null);
+        }
+        if (!layer) return false;
+
+        var lantern = ready.length ? ready[0] : null;
+        var viewportLimits = targetsForViewport();
+        var maximumObjects = viewportLimits.maximum.far + viewportLimits.maximum.mid + viewportLimits.maximum.near;
+        if (!lantern && lanterns.length >= maximumObjects) return false;
+        if (!lantern) {
+          lantern = {};
+          lanterns.push(lantern);
+        }
+
+        var requestedLane = distributionManager.priorityLane;
+        var lane = chooseLaneForSpawn(layer, requestedLane, time);
+        var spawnY = random(1.005, emergency ? 1.055 : 1.105);
+        applyLanternParameters(lantern, layer, lane, spawnY, time);
+        distributionManager.lastSpawnAt = time;
+        distributionManager.lastSpawnLane = lane;
+        distributionManager.laneLastSpawnAt[lane] = time;
+        distributionManager.nextSpawnAt = time + random(800, 1500);
+        if (warmSpawn) distributionManager.warmSpawnsRemaining -= 1;
+        distributionManager.spawnLog.push({ id: lantern.id, layer: layer, lane: lane, time: Math.round(time), y: Number(spawnY.toFixed(3)) });
+        if (distributionManager.spawnLog.length > 80) distributionManager.spawnLog.shift();
+        return true;
+      }
+
+      function updateDistributionManager(time) {
+        if (time >= distributionManager.nextAuditAt) auditDistribution(time);
+        var priorityLane = distributionManager.priorityLane;
+        var emptyTooLong = priorityLane !== -1 && distributionManager.laneEmptySince[priorityLane] &&
+          time - distributionManager.laneEmptySince[priorityLane] > 1700;
+        var emergency = priorityLane !== -1 && distributionManager.lastSnapshot &&
+          (distributionManager.lastSnapshot.effectiveLaneCounts[priorityLane] < targetsForViewport().laneMinimum || emptyTooLong);
+        if (emergency && time - distributionManager.lastSpawnAt > 280) {
+          spawnOneLantern(time, true);
+          return;
+        }
+        if (time >= distributionManager.nextSpawnAt) spawnOneLantern(time, false);
+      }
+
+      function initializeSky(time) {
+        lanterns.length = 0;
+        particles.length = 0;
+        stars.length = 0;
+        randomState = 0x08212026 ^ (mobileMode ? 0x13579BDF : 0x2468ACE0);
+        lanternId = 0;
+        var laneCounts = [0, 0, 0, 0];
+        initialTemplate().forEach(function (slot, index) {
+          var lane = initialLaneFor(index, slot.layer, laneCounts);
+          laneCounts[lane] += 1;
+          lanterns.push(createLantern(slot.layer, lane, slot.y + random(-0.012, 0.012), time));
+        });
+        for (var starIndex = 0; starIndex < (mobileMode ? 28 : 40); starIndex += 1) {
+          stars.push(createStar(starIndex, mobileMode ? 28 : 40));
+        }
+        for (var particleIndex = 0; particleIndex < (mobileMode ? 22 : 34); particleIndex += 1) {
+          particles.push(createParticle(particleIndex));
+        }
+        distributionManager.nextAuditAt = time;
+        distributionManager.nextSpawnAt = time + random(820, 1050);
+        distributionManager.lastSpawnAt = time - 900;
+        distributionManager.lastSpawnLane = -1;
+        distributionManager.laneLastSpawnAt = [time - 4000, time - 4000, time - 4000, time - 4000];
+        distributionManager.laneEmptySince = [0, 0, 0, 0];
+        distributionManager.priorityLane = -1;
+        distributionManager.priorityLayer = null;
+        distributionManager.warmSpawnsRemaining = 2;
+        distributionManager.warmLayerCursor = 0;
+        distributionManager.spawnLog = [];
+        distributionManager.recycleLog = [];
+        refreshSafeRect();
+        initializeFloatingWishes();
+        skyInitialized = true;
+      }
+
+      function drawFrame(time, delta) {
+        var risingProgress = risingStart ? clamp((time - risingStart) / 2400, 0, 1) : 0;
+        if (risingProgress > 0 && risingProgress < 1) {
+          lanterns.forEach(function (lantern) {
+            if (lantern.state !== "active") return;
+            var dx = lantern.x - 0.5;
+            var dy = lantern.y - 0.5;
+            var push = 0.03 * Math.min(1, risingProgress * 1.5);
+            lantern.x += dx * push;
+            lantern.y += dy * push;
+          });
+        }
+        drawSky(time, delta, risingProgress);
+        lanterns.forEach(function (lantern) {
+          updateLantern(lantern, time, delta);
+          drawLantern(lantern, time, risingProgress);
+        });
+        updateFloatingWishes(delta);
+        updateDistributionManager(time);
+      }
+
+      function tick(time) {
+        if (document.hidden) {
+          animationFrame = 0;
+          return;
+        }
+        animationFrame = window.requestAnimationFrame(tick);
+        var delta = Math.min(34, time - (lastFrame || time));
+        lastFrame = time;
+        drawFrame(time, delta);
+      }
+
+      function startAnimation() {
+        resizeCanvas();
+        var now = performance.now();
+        if (!skyInitialized) initializeSky(now);
+        if (!animationFrame) {
+          lastFrame = now;
+          animationFrame = window.requestAnimationFrame(tick);
+        }
+      }
+
+      function updateMusicControl(isPlaying) {
+        musicButton.setAttribute("aria-pressed", String(isPlaying));
+        musicIcon.textContent = isPlaying ? "Ⅱ" : "▶";
+        musicLabel.textContent = isPlaying ? "暂停音乐" : "播放音乐";
+      }
+
+      var autoplayFallbackArmed = false;
+
+      function removeAutoplayFallback() {
+        if (!autoplayFallbackArmed) return;
+        document.removeEventListener("pointerdown", resumeBackgroundMusicOnInteraction, true);
+        document.removeEventListener("keydown", resumeBackgroundMusicOnInteraction, true);
+        autoplayFallbackArmed = false;
+      }
+
+      function resumeBackgroundMusicOnInteraction(event) {
+        if (musicButton.contains(event.target)) return;
+        var playRequest = backgroundMusic.play();
+        if (playRequest && typeof playRequest.then === "function") {
+          playRequest.then(removeAutoplayFallback).catch(function () {});
+        }
+      }
+
+      function armAutoplayFallback() {
+        if (autoplayFallbackArmed) return;
+        autoplayFallbackArmed = true;
+        document.addEventListener("pointerdown", resumeBackgroundMusicOnInteraction, true);
+        document.addEventListener("keydown", resumeBackgroundMusicOnInteraction, true);
+      }
+
+      function requestBackgroundMusic(useFallback) {
+        var playRequest = backgroundMusic.play();
+        if (playRequest && typeof playRequest.catch === "function") {
+          playRequest.catch(function () {
+            updateMusicControl(false);
+            if (useFallback) armAutoplayFallback();
+          });
+        }
+      }
+
+      backgroundMusic.volume = 0.32;
+      updateMusicControl(false);
+
+      musicButton.addEventListener("click", function () {
+        if (!backgroundMusic.paused) {
+          backgroundMusic.pause();
+          return;
+        }
+        requestBackgroundMusic(false);
+      });
+
+      backgroundMusic.addEventListener("play", function () {
+        removeAutoplayFallback();
+        updateMusicControl(true);
+      });
+
+      backgroundMusic.addEventListener("pause", function () {
+        updateMusicControl(false);
+      });
+
+      backgroundMusic.addEventListener("error", function () {
+        updateMusicControl(false);
+        musicButton.disabled = true;
+        musicLabel.textContent = "音乐不可用";
+      });
+
+      requestBackgroundMusic(true);
+
+      window.addEventListener("resize", function () {
+        var wasMobile = mobileMode;
+        mobileMode = window.innerWidth < 600;
+        resizeCanvas();
+        if (wasMobile !== mobileMode) initializeSky(performance.now());
+        if (stageActive) resizeBlessingStage();
+      });
+      document.addEventListener("visibilitychange", function () {
+        if (document.hidden) {
+          if (animationFrame) window.cancelAnimationFrame(animationFrame);
+          animationFrame = 0;
+          if (stageFrame) window.cancelAnimationFrame(stageFrame);
+          stageFrame = 0;
+          return;
+        }
+        lastFrame = performance.now();
+        startAnimation();
+        if (stageActive && !stageFrame) {
+          stageFrame = window.requestAnimationFrame(stageTick);
+        }
+      });
+
+      window.__birthdaySkyDebug = {
+        snapshot: function () {
+          auditDistribution(performance.now());
+          return {
+            viewport: { width: width, height: height, mobile: mobileMode, dynamic: true },
+            safeRect: safeRect,
+            distribution: distributionManager.lastSnapshot,
+            cooldownCount: lanterns.filter(function (lantern) { return lantern.state === "cooldown"; }).length,
+            floatingWishes: floatingWishes.map(function (wish) { return wish.text; }),
+            recentSpawns: distributionManager.spawnLog.slice(-12),
+            recentRecycles: distributionManager.recycleLog.slice(-12),
+            meteor: { history: meteorHistory.length, particles: meteorParticleActiveCount }
+          };
+        },
+        lanterns: lanterns,
+        manager: distributionManager
+      };
+
+      lanternImage.decoding = "async";
+      lanternImage.addEventListener("load", function () {
+        lanternImageReady = true;
+        startAnimation();
+      }, { once: true });
+      lanternImage.addEventListener("error", function () {
+        if (!lanternImage.src.endsWith("lantern.webp")) lanternImage.src = "assets/lantern.webp";
+      });
+      lanternImage.src = "assets/lantern.png";
+      startAnimation();
+
+      var homeScreen = document.getElementById("home-screen");
+      var blessingScreen = document.getElementById("blessing-screen");
+      var openButton = document.getElementById("open-button");
+      var backButton = document.getElementById("back-button");
+      var replayButton = document.getElementById("replay-button");
+      var blessingStage = document.getElementById("blessing-stage");
+      var ringCanvas = document.getElementById("ring-canvas");
+      var ringContext = ringCanvas.getContext("2d");
+      var blessingGroups = Array.prototype.slice.call(document.querySelectorAll(".blessing-group"));
+      var blessingFixedCopy = [
+        blessingScreen.querySelector(".blessing-heading"),
+        blessingScreen.querySelector(".blessing__label"),
+        blessingScreen.querySelector(".signature")
+      ];
+      var blessingGroupInterval = 10000;
+      var blessingHeaderInterval = 1450;
+      var blessingSequenceTimers = [];
+      var wasBlessingPage = false;
+      var routeTransitionTimer = 0;
+      var routeTransitionToken = 0;
+      var stageFrame = 0;
+      var stageStart = 0;
+      var stageActive = false;
+      var stageLastEmit = 0;
+      var stageGroupsStarted = false;
+      var stageFinalTriggered = false;
+      var stageDots = [];
+      var stageStardust = [];
+      var stageGeom = { start: { x: 0, y: 0 }, end: { x: 0, y: 0 }, control: { x: 0, y: 0 }, center: { x: 0, y: 0 }, radius: 120 };
+      var STAGE_METEOR_END = 1800;
+      var STAGE_HOLD_END = 2600;
+      var STAGE_GATHER_END = 3600;
+      var STAGE_FORM_END = 4800;
+      var STAGE_GROUP_START = 5000;
+      var STAGE_CONTRACT_DELAY = 30200;
+      var STAGE_CONTRACT_DURATION = 2200;
+      var stageReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var risingStart = 0;
+      var transitionDust = [];
+      var lastDustSpawn = 0;
+      var stageRingPulse = 0;
+      var meteorHistory = [];
+      var meteorParticlePool = [];
+      var meteorParticleActiveCount = 0;
+      var lastMeteorParticle = 0;
+
+      function cancelRouteTransition() {
+        if (routeTransitionTimer) window.clearTimeout(routeTransitionTimer);
+        routeTransitionTimer = 0;
+        routeTransitionToken += 1;
+        document.body.classList.remove("scene-rising", "scene-blessing");
+        sceneBackdrop.classList.remove("is-rising", "is-blessing");
+      }
+
+      function showHomeRoute() {
+        cancelRouteTransition();
+        clearBlessingSequence();
+        homeScreen.hidden = false;
+        blessingScreen.hidden = true;
+        homeScreen.setAttribute("aria-hidden", "false");
+        blessingScreen.setAttribute("aria-hidden", "true");
+        homeScreen.classList.add("is-active");
+        blessingScreen.classList.remove("is-active");
+        backButton.classList.remove("is-visible");
+        openButton.setAttribute("aria-expanded", "false");
+        document.body.classList.remove("scene-blessing");
+        sceneBackdrop.classList.remove("is-blessing");
+        document.title = "生日祝福 · 张淑芸";
+        refreshSafeRect();
+        wasBlessingPage = false;
+      }
+
+      function finishBlessingTransition(token) {
+        if (token !== routeTransitionToken || window.location.hash !== "#blessing") return;
+        routeTransitionTimer = 0;
+        document.body.classList.remove("scene-rising");
+        document.body.classList.add("scene-blessing");
+        sceneBackdrop.classList.remove("is-rising");
+        sceneBackdrop.classList.add("is-blessing");
+        homeScreen.hidden = true;
+        blessingScreen.hidden = false;
+        homeScreen.setAttribute("aria-hidden", "true");
+        blessingScreen.setAttribute("aria-hidden", "false");
+        homeScreen.classList.remove("is-active");
+        blessingScreen.classList.add("is-active");
+        backButton.classList.add("is-visible");
+        openButton.setAttribute("aria-expanded", "true");
+        document.title = "生日祝福 · 2026年8月21日";
+        refreshSafeRect();
+        window.setTimeout(function () {
+          startBlessingStage();
+        }, 400);
+        wasBlessingPage = true;
+      }
+      function clearBlessingSequence() {
+        blessingSequenceTimers.forEach(function (timer) { window.clearTimeout(timer); });
+        blessingSequenceTimers = [];
+        if (stageFrame) window.cancelAnimationFrame(stageFrame);
+        stageFrame = 0;
+        stageActive = false;
+        stageGroupsStarted = false;
+        stageFinalTriggered = false;
+        risingStart = 0;
+        transitionDust = [];
+        blessingStage.classList.remove("is-running");
+        ringContext.clearRect(0, 0, ringCanvas.width, ringCanvas.height);
+        blessingGroups.forEach(function (group) { group.classList.remove("is-visible"); });
+        blessingFixedCopy.forEach(function (element) {
+          if (element) element.classList.remove("is-copy-visible");
+        });
+        stageStardust = [];
+        meteorHistory = [];
+        clearMeteorParticlePool();
+        replayButton.classList.remove("is-visible");
+      }
+
+      function revealBlessingCopy(element) {
+        if (element) element.classList.add("is-copy-visible");
+      }
+
+      function sequenceAfter(callback, delay) {
+        var timer = window.setTimeout(callback, delay);
+        blessingSequenceTimers.push(timer);
+        return timer;
+      }
+
+      function easeOutCubic(t) {
+        return 1 - Math.pow(1 - t, 3);
+      }
+
+      function easeInOutCubic(t) {
+        return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      }
+
+      function stagePathPoint(t) {
+        var u = 1 - t;
+        var g = stageGeom;
+        return {
+          x: u * u * g.start.x + 2 * u * t * g.control.x + t * t * g.end.x,
+          y: u * u * g.start.y + 2 * u * t * g.control.y + t * t * g.end.y
+        };
+      }
+
+      function cubicPoint(s, c1, c2, e, t) {
+        var u = 1 - t;
+        return {
+          x: u * u * u * s.x + 3 * u * u * t * c1.x + 3 * u * t * t * c2.x + t * t * t * e.x,
+          y: u * u * u * s.y + 3 * u * u * t * c1.y + 3 * u * t * t * c2.y + t * t * t * e.y
+        };
+      }
+
+      function resizeBlessingStage() {
+        var w = window.innerWidth;
+        var h = window.innerHeight;
+        var ratio = Math.min(window.devicePixelRatio || 1, 1.5);
+        ringCanvas.width = Math.round(w * ratio);
+        ringCanvas.height = Math.round(h * ratio);
+        ringCanvas.style.width = w + "px";
+        ringCanvas.style.height = h + "px";
+        ringContext.setTransform(ratio, 0, 0, ratio, 0, 0);
+
+        var mobile = w < 600;
+        var g = stageGeom;
+        g.start = { x: w * (mobile ? 0.9 : 0.88), y: h * (mobile ? 0.12 : 0.14) };
+        g.end = { x: w * (mobile ? 0.17 : 0.2), y: h * (mobile ? 0.64 : 0.6) };
+        var midX = (g.start.x + g.end.x) / 2;
+        var midY = (g.start.y + g.end.y) / 2;
+        var dx = g.end.x - g.start.x;
+        var dy = g.end.y - g.start.y;
+        var len = Math.max(1, Math.sqrt(dx * dx + dy * dy));
+        var nx = -dy / len;
+        var ny = dx / len;
+        g.control = { x: midX + nx * len * 0.18, y: midY + ny * len * 0.18 };
+        g.center = { x: w * 0.5, y: h * (mobile ? 0.5 : 0.48) };
+        g.radius = Math.min(w * (mobile ? 0.48 : 0.22), h * (mobile ? 0.24 : 0.28), mobile ? 180 : 240);
+        document.documentElement.style.setProperty("--ring-r", g.radius + "px");
+
+        var count = mobile ? 10 : 14;
+        stageDots = [];
+        for (var i = 0; i < count; i += 1) {
+          var f = count === 1 ? 0 : i / (count - 1);
+          var point = stagePathPoint(f);
+          var sx = point.x;
+          var sy = point.y;
+          var ex = g.center.x;
+          var ey = g.center.y;
+          var gdx = ex - sx;
+          var gdy = ey - sy;
+          var glen = Math.max(1, Math.sqrt(gdx * gdx + gdy * gdy));
+          var side = (i % 2 === 0 ? 1 : -1) * (0.16 + (i % 3) * 0.06);
+          var gx = (-gdy / glen) * side;
+          var gy = (gdx / glen) * side;
+          var bend = Math.min(glen * 0.36, 170);
+          stageDots.push({
+            f: f,
+            path: point,
+            angle: (i / count) * Math.PI * 2,
+            radius: mobile ? (i % 3 === 0 ? 4.4 : 3.2) : (i % 3 === 0 ? 5.2 : 3.8),
+            gather: {
+              c1: { x: sx + gdx * 0.3 + gx * bend, y: sy + gdy * 0.3 + gy * bend },
+              c2: { x: ex - gdx * 0.24 + gx * bend * 0.58, y: ey - gdy * 0.24 + gy * bend * 0.58 }
+            }
+          });
+        }
+        stageStardust = [];
+        meteorHistory = [];
+        initMeteorParticlePool();
+      }
+
+      function stageGlow(x, y, radius, rgb, alpha) {
+        var ctx = ringContext;
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+        var grad = ctx.createRadialGradient(x, y, 0, x, y, radius);
+        grad.addColorStop(0, "rgba(" + rgb + "," + alpha + ")");
+        grad.addColorStop(0.42, "rgba(" + rgb + "," + (alpha * 0.3) + ")");
+        grad.addColorStop(1, "rgba(" + rgb + ",0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      function drawStage(now, elapsed) {
+        var ctx = ringContext;
+        var w = window.innerWidth;
+        var h = window.innerHeight;
+        ctx.clearRect(0, 0, w, h);
+        var g = stageGeom;
+        var cx = g.center.x;
+        var cy = g.center.y;
+        var R = g.radius;
+
+        var meteorP = elapsed < STAGE_METEOR_END ? easeInOutCubic(elapsed / STAGE_METEOR_END) : 1;
+        var headP = Math.min(meteorP + 0.018, 1);
+        var head = stagePathPoint(headP);
+        var gatherP = clamp((elapsed - STAGE_HOLD_END) / (STAGE_GATHER_END - STAGE_HOLD_END), 0, 1);
+        var formP = clamp((elapsed - STAGE_GATHER_END) / (STAGE_FORM_END - STAGE_GATHER_END), 0, 1);
+        var contractStart = STAGE_GROUP_START + STAGE_CONTRACT_DELAY;
+        var contractP = clamp((elapsed - contractStart) / STAGE_CONTRACT_DURATION, 0, 1);
+        var ringScale = formP > 0 ? easeOutCubic(formP) : 0;
+        if (elapsed >= STAGE_FORM_END) ringScale = 1 - easeInOutCubic(contractP);
+        var ringAlpha = elapsed >= STAGE_FORM_END ? (1 - contractP) : (formP > 0 ? 0.85 : 0);
+        var ringPulse = stageRingPulse ? 1 - clamp((now - stageRingPulse) / 500, 0, 1) : 0;
+        ringAlpha = ringAlpha * (1 + ringPulse * 0.42);
+        var ringAngle = elapsed * 0.00013;
+
+        var meteorMoving = elapsed < STAGE_METEOR_END;
+        var afterglow = 0;
+        if (!meteorMoving && elapsed < STAGE_HOLD_END) {
+          afterglow = Math.max(0, 1 - (elapsed - STAGE_METEOR_END) / 700);
+        }
+        if (meteorP > 0.01 && (meteorMoving || afterglow > 0.01)) {
+          if (meteorMoving) {
+            var jitter = Math.sin(now * 0.02 + meteorHistory.length * 0.7) * 1.5 + (Math.random() - 0.5) * 1.2;
+            meteorHistory.push({ x: head.x, y: head.y, time: now, jitter: jitter });
+            if (meteorHistory.length > (mobileMode ? 80 : 120)) meteorHistory.shift();
+            var particleInterval = mobileMode ? 44 : 36;
+            if (now - lastMeteorParticle > particleInterval) {
+              var tailIndex = Math.max(0, meteorHistory.length - 9);
+              var tp = meteorHistory[tailIndex];
+              var flowAngle = Math.atan2(head.y - tp.y, head.x - tp.x);
+              var countA = mobileMode ? 2 : 3;
+              for (var ma = 0; ma < countA; ma += 1) {
+                var spreadAngle = flowAngle + (Math.random() - 0.5) * 0.9;
+                spawnMeteorParticle(
+                  tp.x + (Math.random() - 0.5) * 4,
+                  tp.y + (Math.random() - 0.5) * 4,
+                  Math.cos(spreadAngle) * (10 + Math.random() * 24) + (Math.random() - 0.5) * 12,
+                  Math.sin(spreadAngle) * (12 + Math.random() * 28) + (Math.random() - 0.5) * 12,
+                  0.7 + Math.random() * 0.8,
+                  650 + Math.random() * 650,
+                  0.55 + Math.random() * 0.25,
+                  "a"
+                );
+              }
+              lastMeteorParticle = now;
+            }
+            if (meteorP > 0.82 && now - lastMeteorParticle > 70) {
+              var countB = mobileMode ? 1 : 2;
+              for (var mb = 0; mb < countB; mb += 1) {
+                var ba = Math.random() * Math.PI * 2;
+                spawnMeteorParticle(
+                  head.x + (Math.random() - 0.5) * 12,
+                  head.y + (Math.random() - 0.5) * 12,
+                  Math.cos(ba) * (18 + Math.random() * 30),
+                  Math.sin(ba) * (18 + Math.random() * 30),
+                  0.8 + Math.random() * 0.9,
+                  380 + Math.random() * 300,
+                  0.9,
+                  "b"
+                );
+              }
+              lastMeteorParticle = now;
+            }
+          }
+
+          var trailLen = meteorHistory.length;
+          var glowPoints = [
+            { i: trailLen - 1, r: 58, a: 0.13 },
+            { i: Math.max(0, trailLen - 8), r: 42, a: 0.08 },
+            { i: Math.max(0, trailLen - 22), r: 32, a: 0.05 },
+            { i: Math.max(0, trailLen - 45), r: 24, a: 0.03 }
+          ];
+          for (var gi = 0; gi < glowPoints.length; gi += 1) {
+            var gp = glowPoints[gi];
+            var gpPt = gp.i >= 0 && gp.i < trailLen ? meteorHistory[gp.i] : null;
+            if (gpPt) stageGlow(gpPt.x, gpPt.y, gp.r, "255, 190, 118", gp.a * (meteorMoving ? 1 : afterglow));
+          }
+
+          for (var k = 1; k < trailLen; k += 1) {
+            var hpPrev = meteorHistory[k - 1];
+            var hp = meteorHistory[k];
+            var ageSec = (now - hp.time) / 1000;
+            var fadeT = 1 - ageSec / 0.85;
+            if (fadeT <= 0) continue;
+            var segAlpha = Math.pow(fadeT, 2.1) * 0.8 * (meteorMoving ? 1 : afterglow);
+            var segWidth = 0.5 + Math.pow(fadeT, 2.6) * 5;
+            var sdx = hp.x - hpPrev.x;
+            var sdy = hp.y - hpPrev.y;
+            var sLen = Math.max(1, Math.sqrt(sdx * sdx + sdy * sdy));
+            var nx = -sdy / sLen;
+            var ny = sdx / sLen;
+            var sx = hpPrev.x + nx * hpPrev.jitter * fadeT;
+            var sy = hpPrev.y + ny * hpPrev.jitter * fadeT;
+            var ex = hp.x + nx * hp.jitter * fadeT;
+            var ey = hp.y + ny * hp.jitter * fadeT;
+            var color = fadeT > 0.72 ? "255, 248, 218" : (fadeT > 0.38 ? "255, 224, 150" : "255, 190, 118");
+            ctx.strokeStyle = "rgba(255, 205, 135," + (segAlpha * 0.1) + ")";
+            ctx.lineWidth = Math.max(1, segWidth * 7);
+            ctx.lineCap = "round";
+            ctx.beginPath();
+            ctx.moveTo(sx, sy);
+            ctx.lineTo(ex, ey);
+            ctx.stroke();
+            ctx.strokeStyle = "rgba(" + color + "," + segAlpha + ")";
+            ctx.lineWidth = segWidth;
+            ctx.beginPath();
+            ctx.moveTo(sx, sy);
+            ctx.lineTo(ex, ey);
+            ctx.stroke();
+            if (fadeT > 0.67) {
+              ctx.strokeStyle = "rgba(255, 252, 232," + (segAlpha * 0.9) + ")";
+              ctx.lineWidth = Math.max(0.8, segWidth * 0.5);
+              ctx.beginPath();
+              ctx.moveTo(sx, sy);
+              ctx.lineTo(ex, ey);
+              ctx.stroke();
+            }
+            if (k <= 3) {
+              var tailAngle = Math.atan2(ey - sy, ex - sx);
+              for (var fj = 0; fj < 2; fj += 1) {
+                var fa = tailAngle + (fj === 0 ? -0.42 : 0.42);
+                ctx.strokeStyle = "rgba(255, 180, 110," + (segAlpha * 0.18) + ")";
+                ctx.lineWidth = 0.8;
+                ctx.beginPath();
+                ctx.moveTo(sx, sy);
+                ctx.lineTo(sx + Math.cos(fa) * (4 + fadeT * 8), sy + Math.sin(fa) * (4 + fadeT * 8));
+                ctx.stroke();
+              }
+            }
+          }
+          var headPulse = 0.86 + 0.14 * Math.sin(now * 0.016);
+          var ramp = meteorMoving ? (0.55 + 0.45 * easeOutCubic(Math.min(1, meteorP * 1.5))) : 1;
+          var headFade = meteorMoving ? Math.max(0.35, 1 - Math.pow(meteorP, 5) * 0.55) : afterglow;
+          var endProgress = meteorMoving ? clamp((meteorP - 0.8) / 0.2, 0, 1) : 0;
+          var coreR = (8 + 4 * headPulse) * ramp * (1 - endProgress * 0.65);
+          var coreA = 0.96 * headFade * (1 - endProgress * 0.8);
+          var haloR = (46 + 16 * headPulse) * ramp * (1 - endProgress * 0.28);
+          var haloA = 0.5 * headFade * (1 - endProgress * 0.35);
+          if (haloA > 0.01) stageGlow(head.x, head.y, haloR, "255, 214, 128", haloA);
+          if (meteorMoving && coreA > 0.01) {
+            stageGlow(head.x, head.y, coreR * 2.2, "255, 250, 228", coreA * 0.7);
+            ctx.save();
+            ctx.globalAlpha = coreA;
+            ctx.fillStyle = "rgba(255, 252, 235, 1)";
+            ctx.beginPath();
+            ctx.arc(head.x, head.y, Math.max(2, coreR * 0.32), 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          }
+        }
+        for (var pj = 0; pj < meteorParticlePool.length; pj += 1) {
+          var pm = meteorParticlePool[pj];
+          if (!pm.active) continue;
+          var mAge = now - pm.born;
+          if (mAge > pm.life) {
+            pm.active = false;
+            meteorParticleActiveCount -= 1;
+            continue;
+          }
+          var mT = mAge / pm.life;
+          pm.x += pm.vx * 0.016;
+          pm.y += pm.vy * 0.016;
+          pm.vx *= 0.992;
+          pm.vy *= 0.992;
+          var pSize = pm.size * (pm.type === "b" ? 1.2 : 1);
+          var mA = pm.alpha * Math.pow(1 - mT, 1.5) * (meteorMoving ? 1 : afterglow);
+          stageGlow(pm.x, pm.y, pSize * 4.5, "255, 216, 138", mA * 0.35);
+          ctx.save();
+          ctx.globalAlpha = Math.max(0, Math.min(1, mA));
+          ctx.fillStyle = "rgba(255, 240, 200, 1)";
+          ctx.beginPath();
+          ctx.arc(pm.x, pm.y, pSize, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+        if (elapsed >= STAGE_HOLD_END) {
+          meteorHistory = [];
+          clearMeteorParticlePool();
+        }
+
+        if (elapsed >= STAGE_FORM_END && contractP < 1) {
+          var emitInterval = stageReducedMotion ? (mobileMode ? 900 : 700) : (mobileMode ? 420 : 260);
+          var maxDust = stageReducedMotion ? (mobileMode ? 6 : 10) : (mobileMode ? 16 : 26);
+          if (now - stageLastEmit > emitInterval && stageStardust.length < maxDust) {
+          stageStardust.push({
+            angle: Math.random() * Math.PI * 2,
+            dist: R * ringScale * (0.92 + Math.random() * 0.1),
+            speed: (8 + Math.random() * 14) * (mobileMode ? 0.75 : 1),
+            size: 0.8 + Math.random() * 1.1,
+            born: now,
+            life: 4800 + Math.random() * 2600,
+            inward: false
+          });
+            stageLastEmit = now;
+          }
+          for (var si = stageStardust.length - 1; si >= 0; si -= 1) {
+            var sp = stageStardust[si];
+            var age = now - sp.born;
+            if (age > sp.life) {
+              stageStardust.splice(si, 1);
+              continue;
+            }
+            var life = age / sp.life;
+            var dir = sp.inward ? -1 : 1;
+            var dist = sp.dist + dir * sp.speed * (age / 1000);
+            if (sp.inward && dist < R * 0.14) {
+              stageStardust.splice(si, 1);
+              continue;
+            }
+            var sx2 = cx + Math.cos(sp.angle) * dist;
+            var sy2 = cy + Math.sin(sp.angle) * dist;
+            var sa = (1 - life) * ringAlpha * 0.5;
+            stageGlow(sx2, sy2, sp.size * 4, "255, 216, 138", sa * 0.35);
+            ctx.save();
+            ctx.globalAlpha = sa;
+            ctx.fillStyle = "rgba(255, 238, 180, 1)";
+            ctx.beginPath();
+            ctx.arc(sx2, sy2, sp.size * (1 - life * 0.45), 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          }
+        } else if (contractP >= 1) {
+          stageStardust = [];
+        }
+
+        stageDots.forEach(function (dot) {
+          var alpha = 0.04;
+          var px = dot.path.x;
+          var py = dot.path.y;
+          var lit = meteorP >= dot.f - 0.04;
+          if (elapsed < STAGE_GATHER_END) {
+            if (lit) alpha = 1;
+            if (elapsed >= STAGE_METEOR_END) alpha = 1;
+            if (gatherP > 0 && elapsed >= STAGE_HOLD_END) {
+              var gp = easeInOutCubic(gatherP);
+              var gathered = cubicPoint(dot.path, dot.gather.c1, dot.gather.c2, { x: cx, y: cy }, gp);
+              px = gathered.x;
+              py = gathered.y;
+              alpha = Math.max(0.55, 1 - gp * 0.18);
+            }
+          } else if (elapsed < STAGE_FORM_END) {
+            var fp = easeOutCubic(formP);
+            var ang = dot.angle + fp * 2.4;
+            px = cx + Math.cos(ang) * R * fp;
+            py = cy + Math.sin(ang) * R * fp;
+            alpha = fp * 0.95;
+          } else {
+            var ang2 = dot.angle + ringAngle;
+            var rr = R * ringScale;
+            px = cx + Math.cos(ang2) * rr;
+            py = cy + Math.sin(ang2) * rr;
+            alpha = ringAlpha * 0.95;
+            if (contractP >= 1) {
+              px = cx;
+              py = cy;
+              alpha = 0;
+            }
+          }
+          if (alpha > 0.02) {
+            stageGlow(px, py, dot.radius * 6, "255, 214, 128", alpha * 0.68);
+            ctx.save();
+            ctx.globalAlpha = alpha;
+            ctx.fillStyle = "rgba(255, 244, 206, 1)";
+            ctx.beginPath();
+            ctx.arc(px, py, dot.radius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          }
+        });
+
+        if (ringScale > 0.02 && ringAlpha > 0.02) {
+          var rr = R * ringScale;
+          stageGlow(cx, cy, rr * 0.95, "158, 128, 226", ringAlpha * 0.15);
+
+          ctx.save();
+          ctx.globalAlpha = ringAlpha * 0.3;
+          var fog = ctx.createRadialGradient(cx, cy, rr * 0.82, cx, cy, rr * 1.34);
+          fog.addColorStop(0, "rgba(255, 214, 140, 0.38)");
+          fog.addColorStop(0.55, "rgba(255, 196, 110, 0.15)");
+          fog.addColorStop(1, "rgba(255, 196, 110, 0)");
+          ctx.fillStyle = fog;
+          ctx.beginPath();
+          ctx.arc(cx, cy, rr * 1.34, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+
+          ctx.save();
+          ctx.translate(cx, cy);
+          ctx.rotate(ringAngle);
+          ctx.globalAlpha = ringAlpha * 0.95;
+          ctx.strokeStyle = "rgba(255, 226, 155, 1)";
+          ctx.lineWidth = 2;
+          ctx.shadowColor = "rgba(255, 196, 92, 0.9)";
+          ctx.shadowBlur = 14;
+          ctx.beginPath();
+          ctx.arc(0, 0, rr, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.shadowBlur = 0;
+          ctx.globalAlpha = ringAlpha * 0.5;
+          ctx.lineWidth = 5;
+          ctx.setLineDash([rr * 0.9, rr * 0.42]);
+          ctx.lineDashOffset = -ringAngle * rr * 0.7;
+          ctx.strokeStyle = "rgba(255, 208, 130, 0.8)";
+          ctx.beginPath();
+          ctx.arc(0, 0, rr * 0.99, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.setLineDash([]);
+          ctx.globalAlpha = ringAlpha * 0.75;
+          ctx.lineWidth = 2.6;
+          ctx.strokeStyle = "rgba(255, 236, 182, 1)";
+          ctx.beginPath();
+          ctx.arc(0, 0, rr, -0.25, 0.95);
+          ctx.stroke();
+          var pointCount = mobileMode ? 18 : 32;
+          for (var pi = 0; pi < pointCount; pi += 1) {
+            var pa = (pi / pointCount) * Math.PI * 2;
+            var pp = 0.45 + 0.55 * (0.5 + 0.5 * Math.sin(pi * 2.7));
+            ctx.globalAlpha = ringAlpha * pp * 0.85;
+            ctx.fillStyle = "rgba(255, 242, 196, 1)";
+            ctx.beginPath();
+            ctx.arc(Math.cos(pa) * rr, Math.sin(pa) * rr, 0.8 + pp * 1.4, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          ctx.restore();
+        }
+
+        if (contractP >= 1) {
+          var pointFade = 1 - clamp((elapsed - (contractStart + STAGE_CONTRACT_DURATION)) / 420, 0, 1);
+          if (pointFade > 0.01) {
+            stageGlow(cx, cy, 20, "255, 222, 150", 0.68 * pointFade);
+            ctx.save();
+            ctx.globalAlpha = 0.96 * pointFade;
+            ctx.fillStyle = "rgba(255, 244, 205, 1)";
+            ctx.beginPath();
+            ctx.arc(cx, cy, 2.2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          }
+        }
+
+        if (!stageGroupsStarted && elapsed >= STAGE_GROUP_START) {
+          stageGroupsStarted = true;
+          revealBlessingCopy(blessingFixedCopy[1]);
+          sequenceAfter(function () {
+            showBlessingGroup(0);
+          }, 1400);
+        }
+        if (!stageFinalTriggered && elapsed >= contractStart + STAGE_CONTRACT_DURATION) {
+          stageFinalTriggered = true;
+          if (blessingFixedCopy[1]) blessingFixedCopy[1].classList.remove("is-copy-visible");
+          revealBlessingCopy(blessingFixedCopy[0]);
+          revealBlessingCopy(blessingFixedCopy[2]);
+          replayButton.classList.add("is-visible");
+        }
+      }
+
+      function stageTick(now) {
+        if (!stageActive || document.hidden) {
+          stageFrame = 0;
+          return;
+        }
+        var elapsed = now - stageStart;
+        var total = STAGE_GROUP_START + STAGE_CONTRACT_DELAY + STAGE_CONTRACT_DURATION;
+        drawStage(now, elapsed);
+        if (elapsed > total + 1200) {
+          stageActive = false;
+          stageFrame = 0;
+          drawStage(now, total + 400);
+          return;
+        }
+        stageFrame = window.requestAnimationFrame(stageTick);
+      }
+
+      function startBlessingStage() {
+        clearBlessingSequence();
+        resizeBlessingStage();
+        stageStart = performance.now();
+        stageLastEmit = stageStart;
+        stageActive = true;
+        blessingStage.classList.add("is-running");
+        stageFrame = window.requestAnimationFrame(stageTick);
+      }
+
+      function stageChapterBurst(outward) {
+        var now = performance.now();
+        var count = mobileMode ? 8 : 12;
+        for (var i = 0; i < count; i += 1) {
+          stageStardust.push({
+            angle: Math.random() * Math.PI * 2,
+            dist: stageGeom.radius * (0.88 + Math.random() * 0.22),
+            speed: (28 + Math.random() * 52) * (outward ? 1 : 0.72),
+            size: 0.7 + Math.random() * 1.1,
+            born: now,
+            life: outward ? 900 + Math.random() * 500 : 700 + Math.random() * 400,
+            inward: !outward
+          });
+        }
+      }
+
+      function initMeteorParticlePool() {
+        var cap = mobileMode ? 90 : 160;
+        meteorParticlePool = [];
+        meteorParticleActiveCount = 0;
+        for (var i = 0; i < cap; i += 1) {
+          meteorParticlePool.push({
+            active: false,
+            x: 0,
+            y: 0,
+            vx: 0,
+            vy: 0,
+            size: 0,
+            born: 0,
+            life: 0,
+            alpha: 1,
+            type: "a"
+          });
+        }
+      }
+
+      function clearMeteorParticlePool() {
+        for (var i = 0; i < meteorParticlePool.length; i += 1) {
+          meteorParticlePool[i].active = false;
+        }
+        meteorParticleActiveCount = 0;
+      }
+
+      function spawnMeteorParticle(x, y, vx, vy, size, life, alpha, type) {
+        if (meteorParticleActiveCount >= meteorParticlePool.length) return;
+        for (var i = 0; i < meteorParticlePool.length; i += 1) {
+          var p = meteorParticlePool[i];
+          if (!p.active) {
+            p.active = true;
+            p.x = x;
+            p.y = y;
+            p.vx = vx;
+            p.vy = vy;
+            p.size = size;
+            p.born = performance.now();
+            p.life = life;
+            p.alpha = alpha;
+            p.type = type;
+            meteorParticleActiveCount += 1;
+            return;
+          }
+        }
+      }
+
+      function showBlessingGroup(index) {
+        if (index >= blessingGroups.length) return;
+        blessingGroups[index].classList.add("is-visible");
+        stageChapterBurst(false);
+        stageRingPulse = performance.now();
+        sequenceAfter(function () {
+          blessingGroups[index].classList.remove("is-visible");
+          stageChapterBurst(true);
+          if (index === blessingGroups.length - 1 && blessingFixedCopy[1]) {
+            blessingFixedCopy[1].classList.remove("is-copy-visible");
+          }
+        }, blessingGroupInterval - 1400);
+
+        if (index < blessingGroups.length - 1) {
+          sequenceAfter(function () {
+            showBlessingGroup(index + 1);
+          }, blessingGroupInterval);
+        }
+      }
+
+      function renderRoute() {
+        var isBlessingPage = window.location.hash === "#blessing";
+        if (!isBlessingPage) {
+          showHomeRoute();
+          return;
+        }
+
+        if (wasBlessingPage || routeTransitionTimer) return;
+        window.scrollTo(0, 0);
+        routeTransitionToken += 1;
+        var token = routeTransitionToken;
+        risingStart = performance.now();
+        document.body.classList.add("scene-rising");
+        sceneBackdrop.classList.add("is-rising");
+        homeScreen.hidden = false;
+        blessingScreen.hidden = true;
+        backButton.classList.remove("is-visible");
+        openButton.setAttribute("aria-expanded", "true");
+        document.title = "生日祝福 · 2026年8月21日";
+        routeTransitionTimer = window.setTimeout(function () {
+          finishBlessingTransition(token);
+        }, 2400);
+      }
+
+      openButton.addEventListener("click", function () {
+        window.location.hash = "blessing";
+      });
+
+      backButton.addEventListener("click", function () {
+        window.location.hash = "";
+      });
+
+      replayButton.addEventListener("click", function () {
+        clearBlessingSequence();
+        window.requestAnimationFrame(startBlessingStage);
+      });
+
+      window.addEventListener("hashchange", renderRoute);
+
+      renderRoute();
+    }());
+  </script>
+</body>
+</html>
